@@ -2267,6 +2267,19 @@ button {
   color: rgba(255, 222, 239, 0.78);
 }
 
+.game-title {
+  font-size: 24px;
+  line-height: 1.35;
+  color: #fff4fa;
+}
+
+.game-subtitle {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(255, 226, 241, 0.62);
+}
+
 .game-meta {
   display: flex;
   align-items: center;
@@ -2279,6 +2292,39 @@ button {
   font-size: 14px;
   letter-spacing: 1px;
   color: #ffe8f4;
+}
+
+.game-timer {
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: rgba(255, 230, 243, 0.72);
+}
+
+.game-progress {
+  margin-top: 14px;
+}
+
+.game-progress-track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.game-progress-fill {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #ff9ed1, #ffd36e, #fff3c8);
+  box-shadow: 0 0 18px rgba(255, 214, 109, 0.28);
+  transition: width 0.28s ease;
+}
+
+.game-progress-note {
+  margin-top: 8px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: rgba(255, 214, 234, 0.56);
 }
 
 .game-btn {
@@ -2328,6 +2374,49 @@ button {
   pointer-events: none;
 }
 
+.game-core {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background:
+    radial-gradient(circle at 35% 35%, #fffef9 0 24%, #ffd8ea 42%, #ff95cb 68%, rgba(255, 149, 203, 0.08) 78%, transparent 80%);
+  box-shadow:
+    0 0 24px rgba(255, 182, 220, 0.4),
+    0 0 56px rgba(255, 110, 180, 0.22);
+  animation: gameCorePulse 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.game-core::before {
+  content: "她";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(79, 18, 55, 0.9);
+  font-size: 22px;
+  font-weight: 600;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.game-core-ring {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 118px;
+  height: 118px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 215, 236, 0.2);
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 26px rgba(255, 182, 220, 0.08);
+  pointer-events: none;
+}
+
 .game-status {
   position: absolute;
   left: 14px;
@@ -2341,6 +2430,48 @@ button {
   font-size: 13px;
   line-height: 1.6;
   z-index: 2;
+}
+
+.game-result {
+  position: absolute;
+  inset: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 206, 232, 0.18);
+  border-radius: 20px;
+  background: rgba(23, 10, 41, 0.72);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  text-align: center;
+  z-index: 3;
+}
+
+.game-result[hidden] {
+  display: none;
+}
+
+.game-result-title {
+  font-size: 24px;
+  color: #fff5fb;
+}
+
+.game-result-text {
+  max-width: 250px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(255, 228, 241, 0.84);
+}
+
+.game-result-btn {
+  margin-top: 6px;
+  padding: 10px 20px;
+  border: 1px solid rgba(255, 205, 231, 0.26);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 161, 208, 0.18), rgba(255, 255, 255, 0.08));
+  color: #fff0f8;
 }
 
 .catch-star {
@@ -2382,6 +2513,18 @@ button {
   transition: transform 0.22s ease, opacity 0.22s ease;
 }
 
+.catch-spark {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff 0 40%, #ffd36e 68%, transparent 72%);
+  box-shadow: 0 0 10px rgba(255, 211, 110, 0.5);
+  pointer-events: none;
+  animation: catchSparkBurst 0.55s ease-out forwards;
+  z-index: 2;
+}
+
 .game-page-wrap {
   width: 100%;
   display: flex;
@@ -2394,6 +2537,26 @@ button {
   from { transform: translateY(0) scale(0.75); opacity: 0; }
   12% { opacity: 1; }
   to { transform: translateY(236px) scale(1); opacity: 0.92; }
+}
+
+@keyframes catchSparkBurst {
+  from { transform: translate(0, 0) scale(0.4); opacity: 1; }
+  to { transform: translate(var(--sx, 0px), var(--sy, -24px)) scale(1.1); opacity: 0; }
+}
+
+@keyframes gameCorePulse {
+  0%, 100% {
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow:
+      0 0 24px rgba(255, 182, 220, 0.4),
+      0 0 56px rgba(255, 110, 180, 0.22);
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.06);
+    box-shadow:
+      0 0 28px rgba(255, 182, 220, 0.52),
+      0 0 68px rgba(255, 110, 180, 0.3);
+  }
 }
 
 .confession.answered .confess-actions {
@@ -2935,7 +3098,9 @@ button {
 
   .save-day.show,
   .confess-btn.yes::after,
-  .catch-star {
+  .catch-star,
+  .game-core,
+  .catch-spark {
     animation: none !important;
   }
 
@@ -2993,6 +3158,10 @@ button {
 
   .game-area {
     height: 224px;
+  }
+
+  .game-title {
+    font-size: 22px;
   }
 }
 </style>
@@ -3485,13 +3654,27 @@ button {
   <div class="game-page-wrap">
     <div class="game-panel" id="gamePanel">
       <div class="timeline-label">点亮星空</div>
+      <div class="game-title">把星光送到她身边</div>
+      <div class="game-subtitle">每点亮一颗星，都会更靠近这片宇宙的中心。</div>
       <div class="game-intro">轻轻点住掉落的星星，点亮 12 颗之后，这片宇宙会把偏爱说给她听。</div>
       <div class="game-meta">
         <div class="game-score" id="gameScore">已点亮 0 / 12</div>
+        <div class="game-timer" id="gameTimer">剩余 14 秒</div>
         <button class="game-btn" id="gameStartBtn" type="button">开始点亮</button>
       </div>
+      <div class="game-progress">
+        <div class="game-progress-track"><div class="game-progress-fill" id="gameProgressFill"></div></div>
+        <div class="game-progress-note" id="gameProgressNote">点亮整片星空后，会出现一段只属于她的回应。</div>
+      </div>
       <div class="game-area" id="gameArea">
+        <div class="game-core-ring" aria-hidden="true"></div>
+        <div class="game-core" aria-hidden="true"></div>
         <div class="game-status" id="gameStatus">准备好了就开始吧，星星会慢慢落下来。</div>
+        <div class="game-result" id="gameResult" hidden>
+          <div class="game-result-title" id="gameResultTitle">整片星空都亮了</div>
+          <div class="game-result-text" id="gameResultText">你已经点亮了我的整个宇宙。</div>
+          <button class="game-result-btn" id="gameResultBtn" type="button">再点亮一次</button>
+        </div>
       </div>
     </div>
   </div>
@@ -3688,6 +3871,8 @@ document.addEventListener('DOMContentLoaded', function () {
     clearGameStars();
     stopStarGame(false);
     setGameScore(0);
+    setGameTimerText(reduceMotion ? 18_000 : 14_000);
+    hideGameResult();
     setGameStatus('准备好了就开始吧，星星会慢慢落下来。');
   }
 
@@ -4127,6 +4312,13 @@ document.addEventListener('DOMContentLoaded', function () {
   const gameArea = $('gameArea');
   const gameStatus = $('gameStatus');
   const gameScore = $('gameScore');
+  const gameTimer = $('gameTimer');
+  const gameProgressFill = $('gameProgressFill');
+  const gameProgressNote = $('gameProgressNote');
+  const gameResult = $('gameResult');
+  const gameResultTitle = $('gameResultTitle');
+  const gameResultText = $('gameResultText');
+  const gameResultBtn = $('gameResultBtn');
   const gameStartBtn = $('gameStartBtn');
   const saveDay = $('saveDay');
   const saveModal = $('saveModal');
@@ -4145,6 +4337,9 @@ document.addEventListener('DOMContentLoaded', function () {
   let gameTarget = 12;
   let gameSpawnTimer = null;
   let gameStopTimer = null;
+  let gameCountdownTimer = null;
+  let gameDurationMs = 14000;
+  let gameEndAt = 0;
 
   function pad(n) {
     return String(n).padStart(2, '0');
@@ -4337,19 +4532,63 @@ document.addEventListener('DOMContentLoaded', function () {
   function setGameScore(value) {
     gameScoreValue = value;
     if (gameScore) gameScore.textContent = '已点亮 ' + value + ' / ' + gameTarget;
+    if (gameProgressFill) gameProgressFill.style.width = Math.min(100, (value / gameTarget) * 100) + '%';
+    if (gameProgressNote) {
+      gameProgressNote.textContent = value >= gameTarget
+        ? '星空已经为她亮起。'
+        : '再点亮 ' + Math.max(0, gameTarget - value) + ' 颗，就能把整片宇宙送给她。';
+    }
+  }
+
+  function setGameTimerText(msLeft) {
+    if (!gameTimer) return;
+    const secs = Math.max(0, Math.ceil(msLeft / 1000));
+    gameTimer.textContent = '剩余 ' + secs + ' 秒';
+  }
+
+  function syncGameCountdown() {
+    if (!gameRunning) return;
+    setGameTimerText(gameEndAt - Date.now());
+  }
+
+  function showGameResult(title, text) {
+    if (!gameResult || !gameResultTitle || !gameResultText) return;
+    gameResultTitle.textContent = title;
+    gameResultText.textContent = text;
+    gameResult.hidden = false;
+  }
+
+  function hideGameResult() {
+    if (gameResult) gameResult.hidden = true;
   }
 
   function clearGameStars() {
     if (!gameArea) return;
-    gameArea.querySelectorAll('.catch-star').forEach(function (star) {
+    gameArea.querySelectorAll('.catch-star, .catch-spark').forEach(function (star) {
       star.remove();
     });
   }
 
+  function burstCatchSpark(x, y) {
+    if (!gameArea || reduceMotion) return;
+    for (let i = 0; i < 8; i++) {
+      const spark = document.createElement('span');
+      spark.className = 'catch-spark';
+      spark.style.left = x + 'px';
+      spark.style.top = y + 'px';
+      spark.style.setProperty('--sx', Math.round(Math.random() * 44 - 22) + 'px');
+      spark.style.setProperty('--sy', Math.round(Math.random() * 40 - 34) + 'px');
+      gameArea.appendChild(spark);
+      setTimeout(function () { spark.remove(); }, 650);
+    }
+  }
+
   function stopStarGame(finished) {
     clearInterval(gameSpawnTimer);
+    clearInterval(gameCountdownTimer);
     clearTimeout(gameStopTimer);
     gameSpawnTimer = null;
+    gameCountdownTimer = null;
     gameStopTimer = null;
     gameRunning = false;
     if (gameStartBtn) gameStartBtn.textContent = finished ? '再点亮一次' : '重新开始';
@@ -4360,8 +4599,10 @@ document.addEventListener('DOMContentLoaded', function () {
     stopStarGame(true);
     if (success) {
       setGameStatus('你已经点亮了我的整个宇宙。');
+      showGameResult('整片星空都亮了', '你已经点亮了我的整个宇宙。');
     } else {
       setGameStatus('差一点就点亮整片星空了，再试一次吧。');
+      showGameResult('差一点点', '还差一点点星光，再试一次，就能把整片宇宙送给她。');
     }
   }
 
@@ -4387,6 +4628,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     star.addEventListener('click', function () {
       if (!gameRunning) return;
+      const rect = star.getBoundingClientRect();
+      const areaRect = gameArea.getBoundingClientRect();
+      burstCatchSpark(
+        rect.left - areaRect.left + rect.width / 2,
+        rect.top - areaRect.top + rect.height / 2
+      );
       setGameScore(gameScoreValue + 1);
       star.classList.add('hit');
       setTimeout(removeStar, 180);
@@ -4404,18 +4651,24 @@ document.addEventListener('DOMContentLoaded', function () {
   function startStarGame() {
     if (!gamePanel || !gameArea) return;
     clearGameStars();
+    hideGameResult();
     clearInterval(gameSpawnTimer);
+    clearInterval(gameCountdownTimer);
     clearTimeout(gameStopTimer);
     gameRunning = true;
     setGameScore(0);
     setGameStatus('开始了，去接住那些朝她落下来的星光。');
+    gameDurationMs = reduceMotion ? 18000 : 14000;
+    gameEndAt = Date.now() + gameDurationMs;
+    setGameTimerText(gameDurationMs);
     if (gameStartBtn) gameStartBtn.textContent = '进行中...';
 
     spawnCatchStar();
     gameSpawnTimer = setInterval(spawnCatchStar, reduceMotion ? 950 : 620);
+    gameCountdownTimer = setInterval(syncGameCountdown, 250);
     gameStopTimer = setTimeout(function () {
       if (gameRunning) finishStarGame(gameScoreValue >= gameTarget);
-    }, reduceMotion ? 18000 : 14000);
+    }, gameDurationMs);
   }
 
   function showSaveDayButton() {
@@ -4673,6 +4926,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   if (gameStartBtn) {
     gameStartBtn.addEventListener('click', startStarGame);
+  }
+  if (gameResultBtn) {
+    gameResultBtn.addEventListener('click', startStarGame);
   }
   if (openGamePage) {
     openGamePage.addEventListener('click', showGamePage);
