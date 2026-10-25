@@ -2033,6 +2033,172 @@ button {
   color: rgba(255, 218, 236, 0.72);
 }
 
+.memory-panel {
+  margin: 14px auto 0;
+  padding: 16px 18px 14px;
+  width: min(100%, 420px);
+  border: 1px solid rgba(255, 195, 228, 0.14);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(106, 153, 255, 0.03));
+  box-shadow:
+    0 10px 30px rgba(22, 8, 38, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.memory-panel[hidden] {
+  display: none;
+}
+
+.memory-intro {
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(255, 222, 239, 0.78);
+}
+
+.memory-stars {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.memory-star {
+  position: relative;
+  min-height: 112px;
+  padding: 14px 14px 12px;
+  border: 1px solid rgba(255, 206, 232, 0.18);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.18), transparent 42%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  text-align: left;
+  color: #ffe8f4;
+  box-shadow:
+    0 10px 24px rgba(22, 8, 38, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.3, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+  overflow: hidden;
+}
+
+.memory-star::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--memory-color, #ff9ed1) 0 30%, rgba(255, 255, 255, 0.95) 38%, transparent 72%);
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--memory-color, #ff9ed1) 58%, transparent),
+    0 0 32px color-mix(in srgb, var(--memory-color, #ff9ed1) 28%, transparent);
+  opacity: 0.95;
+}
+
+.memory-star:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 206, 232, 0.34);
+  box-shadow:
+    0 14px 30px rgba(22, 8, 38, 0.18),
+    0 0 20px rgba(255, 174, 220, 0.12);
+}
+
+.memory-star:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.memory-star:focus-visible {
+  outline: 2px solid rgba(255, 196, 226, 0.9);
+  outline-offset: 3px;
+}
+
+.memory-star-date {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: rgba(255, 216, 235, 0.56);
+}
+
+.memory-star-title {
+  margin-top: 10px;
+  padding-right: 28px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #fff1f8;
+}
+
+.memory-star-desc {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: rgba(255, 223, 239, 0.72);
+}
+
+.memory-modal {
+  width: min(88vw, 430px);
+  max-width: 430px;
+  padding: 0;
+  border: none;
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(47, 20, 72, 0.98), rgba(28, 10, 48, 0.98));
+  color: #ffe3f1;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+}
+
+.memory-modal::backdrop {
+  background: rgba(10, 3, 20, 0.8);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.memory-modal-card {
+  padding: 24px 22px 20px;
+}
+
+.memory-modal-date {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: rgba(255, 214, 234, 0.56);
+}
+
+.memory-modal-title {
+  margin-top: 10px;
+  font-size: 24px;
+  line-height: 1.4;
+  color: #fff3f9;
+}
+
+.memory-modal-desc {
+  margin-top: 14px;
+  font-size: 15px;
+  line-height: 1.9;
+  color: rgba(255, 228, 241, 0.86);
+  white-space: pre-wrap;
+}
+
+.memory-modal-image {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  border-radius: 18px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.28);
+}
+
+.memory-modal-image[hidden] {
+  display: none;
+}
+
+.memory-modal-close {
+  margin-top: 18px;
+  padding: 10px 20px;
+  border: 1px solid rgba(255, 205, 231, 0.26);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffe3f1;
+}
+
 .confession.answered .confess-actions {
   animation: none !important;
   opacity: 0;
@@ -2613,6 +2779,10 @@ button {
   .select-tip {
     transition-duration: 0.01ms !important;
   }
+
+  .memory-star {
+    transition-duration: 0.01ms !important;
+  }
 }
 </style>
 </head>
@@ -3065,6 +3235,11 @@ button {
         <div class="timeline-current" id="timelineCurrent">正在展开这片星空...</div>
         <div class="timeline-track" id="timelineTrack"></div>
       </div>
+      <div class="memory-panel" id="memoryPanel" hidden>
+        <div class="timeline-label">回忆星球</div>
+        <div class="memory-intro">把那些值得反复想起的时刻，收进这片小小的宇宙里。</div>
+        <div class="memory-stars" id="memoryStars"></div>
+      </div>
       <button class="save-day" id="saveDay" type="button" hidden>保存今天</button>
     </section>
   </article>
@@ -3090,6 +3265,16 @@ button {
     </div>
   </dialog>
 
+  <dialog class="memory-modal" id="memoryModal" aria-label="回忆星球详情">
+    <div class="memory-modal-card">
+      <div class="memory-modal-date" id="memoryModalDate">--</div>
+      <h3 class="memory-modal-title" id="memoryModalTitle">回忆</h3>
+      <p class="memory-modal-desc" id="memoryModalDesc"></p>
+      <img class="memory-modal-image" id="memoryModalImage" alt="回忆图片" hidden />
+      <button class="memory-modal-close" id="memoryModalClose" type="button">收好这颗星球</button>
+    </div>
+  </dialog>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -3108,6 +3293,41 @@ document.addEventListener('DOMContentLoaded', function () {
     { milestone_day: 30, title: '第 30 天', description: '已经一起走过一个月了。' },
     { milestone_day: 100, title: '第 100 天', description: '这一百天，足够让星光有了名字。' },
     { milestone_day: 365, title: '一周年', description: '这一年，足够让我更确定你就是偏爱。' }
+  ];
+
+  const DEFAULT_MEMORY_STARS = [
+    {
+      title: '第一次聊天',
+      memory_date: '2026-10-01',
+      description: '那天开始，我就悄悄记住你了。',
+      image_url: '',
+      star_color: '#ff9ed1',
+      orbit_order: 1
+    },
+    {
+      title: '第一次见面',
+      memory_date: '2026-10-10',
+      description: '见到你的那一刻，比想象里还要心动。',
+      image_url: '',
+      star_color: '#ffd36e',
+      orbit_order: 2
+    },
+    {
+      title: '第一次一起吃饭',
+      memory_date: '2026-10-15',
+      description: '普通的一顿饭，也因为你变得很特别。',
+      image_url: '',
+      star_color: '#9ed8ff',
+      orbit_order: 3
+    },
+    {
+      title: '第一次认真想表白',
+      memory_date: '2026-10-20',
+      description: '那几天一直在想，怎么把心意说得更认真一点。',
+      image_url: '',
+      star_color: '#c6a6ff',
+      orbit_order: 4
+    }
   ];
 
   const $ = (id) => document.getElementById(id);
@@ -3636,6 +3856,14 @@ document.addEventListener('DOMContentLoaded', function () {
   const timelinePanel = $('timelinePanel');
   const timelineCurrent = $('timelineCurrent');
   const timelineTrack = $('timelineTrack');
+  const memoryPanel = $('memoryPanel');
+  const memoryStarsBox = $('memoryStars');
+  const memoryModal = $('memoryModal');
+  const memoryModalDate = $('memoryModalDate');
+  const memoryModalTitle = $('memoryModalTitle');
+  const memoryModalDesc = $('memoryModalDesc');
+  const memoryModalImage = $('memoryModalImage');
+  const memoryModalClose = $('memoryModalClose');
   const saveDay = $('saveDay');
   const saveModal = $('saveModal');
   const saveImage = $('saveImage');
@@ -3647,6 +3875,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let anniversaryTimer = null;
   let supabaseClient = null;
   let timelineItems = [];
+  let memoryStarsData = [];
 
   function pad(n) {
     return String(n).padStart(2, '0');
@@ -3747,6 +3976,65 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function renderMemoryStars() {
+    if (!memoryPanel || !memoryStarsBox) return;
+    const items = (memoryStarsData && memoryStarsData.length ? memoryStarsData : DEFAULT_MEMORY_STARS)
+      .slice()
+      .sort(function (a, b) {
+        return (a.orbit_order || 0) - (b.orbit_order || 0);
+      });
+
+    if (!items.length) {
+      memoryPanel.hidden = true;
+      return;
+    }
+
+    memoryPanel.hidden = false;
+    memoryStarsBox.replaceChildren();
+
+    items.forEach(function (item) {
+      const button = document.createElement('button');
+      button.className = 'memory-star';
+      button.type = 'button';
+      button.style.setProperty('--memory-color', item.star_color || '#ff9ed1');
+
+      const date = document.createElement('div');
+      date.className = 'memory-star-date';
+      date.textContent = item.memory_date ? formatDate(item.memory_date) : '一颗温柔的星';
+
+      const title = document.createElement('div');
+      title.className = 'memory-star-title';
+      title.textContent = item.title;
+
+      const desc = document.createElement('div');
+      desc.className = 'memory-star-desc';
+      desc.textContent = item.description || '有些回忆不需要很长，只要想起就会发光。';
+
+      button.appendChild(date);
+      button.appendChild(title);
+      button.appendChild(desc);
+
+      button.addEventListener('click', function () {
+        if (!memoryModal || !memoryModalTitle || !memoryModalDesc || !memoryModalDate || !memoryModalImage) return;
+        memoryModalDate.textContent = item.memory_date ? formatDate(item.memory_date) : '一颗温柔的星';
+        memoryModalTitle.textContent = item.title;
+        memoryModalDesc.textContent = item.description || '有些回忆不需要很长，只要想起就会发光。';
+
+        if (item.image_url) {
+          memoryModalImage.hidden = false;
+          memoryModalImage.src = item.image_url;
+        } else {
+          memoryModalImage.hidden = true;
+          memoryModalImage.removeAttribute('src');
+        }
+
+        if (!memoryModal.open) memoryModal.showModal();
+      });
+
+      memoryStarsBox.appendChild(button);
+    });
+  }
+
   function showSaveDayButton() {
     if (!saveDay) return;
     saveDay.hidden = false;
@@ -3791,6 +4079,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     renderTimeline();
+    renderMemoryStars();
 
     showSaveDayButton();
   }
@@ -3830,6 +4119,17 @@ document.addEventListener('DOMContentLoaded', function () {
     return data && data.length ? data : DEFAULT_TIMELINE_ITEMS;
   }
 
+  async function fetchMemoryStars() {
+    const client = getSupabaseClient();
+    if (!client) return DEFAULT_MEMORY_STARS;
+    const { data, error } = await client
+      .from('memory_stars')
+      .select('title, memory_date, description, image_url, star_color, orbit_order')
+      .order('orbit_order', { ascending: true });
+    if (error) throw error;
+    return data && data.length ? data : DEFAULT_MEMORY_STARS;
+  }
+
   async function createAnniversaryRecord(startedAt) {
     const client = getSupabaseClient();
     if (!client) throw new Error('missing_supabase_config');
@@ -3851,6 +4151,13 @@ document.addEventListener('DOMContentLoaded', function () {
     } catch (error) {
       console.error('读取时间轴失败:', error);
       timelineItems = DEFAULT_TIMELINE_ITEMS;
+    }
+
+    try {
+      memoryStarsData = await fetchMemoryStars();
+    } catch (error) {
+      console.error('读取回忆星球失败:', error);
+      memoryStarsData = DEFAULT_MEMORY_STARS;
     }
 
     try {
@@ -3970,6 +4277,14 @@ document.addEventListener('DOMContentLoaded', function () {
   if (saveModal) {
     saveModal.addEventListener('click', function (e) {
       if (e.target === saveModal) closeSaveCard();
+    });
+  }
+  if (memoryModalClose) memoryModalClose.addEventListener('click', function () {
+    if (memoryModal && memoryModal.open) memoryModal.close();
+  });
+  if (memoryModal) {
+    memoryModal.addEventListener('click', function (e) {
+      if (e.target === memoryModal) memoryModal.close();
     });
   }
 
