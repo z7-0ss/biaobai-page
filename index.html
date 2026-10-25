@@ -711,21 +711,27 @@ button {
 
 .bubble {
   position: relative;
-  padding: 14px 18px;
+  padding: 15px 20px;
   max-width: min(172px, 42vw);
-  background: linear-gradient(180deg, #ffe4f3 0%, #ffc4e0 100%);
-  color: #6b1f47;
-  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  background:
+    linear-gradient(180deg, rgba(255, 239, 248, 0.98) 0%, rgba(255, 206, 229, 0.95) 100%);
+  color: #642246;
+  border-radius: 20px;
   font-size: 15px;
   line-height: 1.5;
   text-align: left;
   opacity: 0;
-  transform: translateY(14px) scale(0.94);
-  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.2, 0.8, 0.3, 1.2), box-shadow 0.3s ease;
+  transform: translateY(16px) scale(0.94);
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.2, 0.8, 0.3, 1.15), box-shadow 0.35s ease, border-color 0.35s ease;
   pointer-events: auto;
+  -webkit-backdrop-filter: blur(10px) saturate(135%);
+  backdrop-filter: blur(10px) saturate(135%);
   box-shadow:
-    0 6px 18px rgba(255, 105, 180, 0.35),
-    inset 0 0 12px rgba(255, 255, 255, 0.6);
+    0 10px 26px rgba(255, 105, 180, 0.24),
+    0 2px 10px rgba(55, 14, 68, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  overflow: hidden;
 }
 
 .bubble::before,
@@ -738,33 +744,37 @@ button {
 }
 
 .bubble::before {
-  top: 6px;
-  left: 10px;
+  top: 7px;
+  left: 11px;
 }
 
 .bubble::after {
-  bottom: 6px;
-  right: 10px;
+  bottom: 7px;
+  right: 11px;
 }
 
 .bubble.show {
   opacity: 1;
   transform: translateY(0) scale(1);
+  animation: bubbleDrift 3.8s ease-in-out 0.55s infinite;
 }
 
 .bubble-right.show {
-  transition-delay: 0.12s;
+  transition-delay: 0.14s;
+  animation-delay: 0.72s;
 }
 
 .bubble.show:hover {
-  transform: translateY(-3px) scale(1.03);
+  transform: translateY(-4px) scale(1.035);
+  border-color: rgba(255, 150, 205, 0.75);
   box-shadow:
-    0 12px 26px rgba(255, 105, 180, 0.45),
-    inset 0 0 12px rgba(255, 255, 255, 0.7);
+    0 16px 34px rgba(255, 105, 180, 0.3),
+    0 0 24px rgba(255, 172, 215, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 .bubble:active {
-  transform: translateY(0) scale(0.97);
+  transform: translateY(1px) scale(0.975);
 }
 
 .bubble:focus-visible {
@@ -775,6 +785,11 @@ button {
 .bubble-left {
   text-align: right;
   padding-left: 22px;
+}
+
+@keyframes bubbleDrift {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.012); }
 }
 
 .select-tip {
@@ -1486,29 +1501,37 @@ button {
 .save-day {
   display: block;
   margin: 16px auto 0;
-  padding: 10px 20px;
-  border: 1px solid rgba(255, 190, 225, 0.38);
+  padding: 11px 22px;
+  border: 1px solid rgba(255, 190, 225, 0.28);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.05);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 190, 225, 0.08));
   color: #ffd8ea;
   font-family: inherit;
   font-size: 13px;
   letter-spacing: 2px;
   cursor: pointer;
   opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.6s ease, transform 0.6s ease, background 0.3s ease;
+  transform: translateY(10px) scale(0.96);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1), background 0.3s ease, box-shadow 0.3s ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  box-shadow:
+    0 8px 20px rgba(36, 10, 58, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
 .save-day.show {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
+  animation: saveDayFloat 3.6s ease-in-out 0.75s infinite;
 }
 
 .save-day:hover {
-  background: rgba(255, 110, 170, 0.2);
+  background: linear-gradient(180deg, rgba(255, 215, 235, 0.22), rgba(255, 144, 196, 0.18));
+  box-shadow:
+    0 12px 26px rgba(255, 92, 158, 0.22),
+    0 0 22px rgba(255, 182, 220, 0.22);
 }
 
 .save-day:focus-visible {
@@ -1518,6 +1541,11 @@ button {
 
 .save-day[hidden] {
   display: none;
+}
+
+@keyframes saveDayFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-2px) scale(1.01); }
 }
 
 .save-modal {
@@ -1621,8 +1649,14 @@ button {
 /* ---------- 表白结尾 ---------- */
 .confession {
   margin-top: 44px;
-  padding-top: 30px;
-  border-top: 1px solid rgba(255, 200, 230, 0.18);
+  padding: 30px 18px 10px;
+  border-top: 1px solid rgba(255, 200, 230, 0.14);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 170, 214, 0.02));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 12px 30px rgba(21, 6, 34, 0.12);
   text-align: center;
 }
 
@@ -1660,11 +1694,12 @@ button {
 
 .confess-q {
   margin: 10px 0 0;
-  font-size: 22px;
+  font-size: 23px;
   font-weight: 500;
   letter-spacing: 3px;
   text-indent: 3px;
   color: #ffd6ea;
+  text-shadow: 0 6px 20px rgba(255, 120, 180, 0.12);
 }
 
 .confess-actions {
@@ -1678,30 +1713,57 @@ button {
 }
 
 .confess-btn {
+  position: relative;
   font-family: inherit;
   font-size: 15px;
   letter-spacing: 2px;
-  padding: 12px 26px;
+  padding: 13px 28px;
+  min-width: 112px;
   border-radius: 999px;
   cursor: pointer;
-  transition: transform 0.25s ease, box-shadow 0.3s ease, background 0.3s ease;
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.3, 1), box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  overflow: hidden;
+  isolation: isolate;
 }
 
 .confess-btn.yes {
   border: none;
   color: #fff;
-  background: linear-gradient(120deg, #ff8ab3 0%, #ff2e76 42%, #ff7aa8 68%, #ff2e76 100%);
-  background-size: 240% 100%;
+  background: linear-gradient(125deg, #ffb0cd 0%, #ff5e95 30%, #ff2e76 58%, #ff7ba9 100%);
+  background-size: 220% 100%;
   box-shadow:
-    0 10px 26px rgba(255, 46, 118, 0.45),
-    0 0 18px rgba(255, 182, 220, 0.35);
-  animation: yesShine 4.2s linear infinite, yesPulse 2.8s ease-in-out infinite;
+    0 14px 30px rgba(255, 46, 118, 0.34),
+    0 0 22px rgba(255, 182, 220, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.38);
+  animation: yesShine 4.8s linear infinite, yesPulse 3.2s ease-in-out infinite;
+}
+
+.confess-btn.yes::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0));
+  opacity: 0.9;
+  z-index: -1;
+}
+
+.confess-btn.yes::after {
+  content: "";
+  position: absolute;
+  top: -20%;
+  left: -35%;
+  width: 44%;
+  height: 140%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  transform: rotate(16deg);
+  animation: yesSweep 3.9s ease-in-out infinite;
 }
 
 .confess-btn.yes:hover {
-  transform: translateY(-2px) scale(1.03);
+  transform: translateY(-3px) scale(1.035);
 }
 
 @keyframes yesShine {
@@ -1709,31 +1771,46 @@ button {
   100% { background-position: 200% 50%; }
 }
 
+@keyframes yesSweep {
+  0%, 100% { transform: translateX(-180%) rotate(16deg); opacity: 0; }
+  20% { opacity: 0; }
+  38% { opacity: 1; }
+  62% { opacity: 0.9; }
+  78% { transform: translateX(360%) rotate(16deg); opacity: 0; }
+}
+
 @keyframes yesPulse {
   0%, 100% {
     box-shadow:
-      0 10px 26px rgba(255, 46, 118, 0.45),
-      0 0 18px rgba(255, 182, 220, 0.35);
+      0 14px 30px rgba(255, 46, 118, 0.34),
+      0 0 22px rgba(255, 182, 220, 0.24),
+      inset 0 1px 0 rgba(255, 255, 255, 0.38);
   }
   50% {
     box-shadow:
-      0 12px 32px rgba(255, 46, 118, 0.62),
-      0 0 30px rgba(255, 182, 220, 0.55);
+      0 18px 36px rgba(255, 46, 118, 0.44),
+      0 0 32px rgba(255, 182, 220, 0.36),
+      inset 0 1px 0 rgba(255, 255, 255, 0.48);
   }
 }
 
 .confess-btn.think {
-  border: 1px solid rgba(255, 200, 230, 0.35);
-  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 200, 230, 0.24);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
   color: #ffd0e6;
+  box-shadow:
+    0 8px 18px rgba(23, 6, 36, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .confess-btn.think:hover {
-  background: rgba(255, 190, 225, 0.12);
+  background: linear-gradient(180deg, rgba(255, 214, 236, 0.12), rgba(255, 173, 214, 0.07));
+  border-color: rgba(255, 200, 230, 0.36);
+  transform: translateY(-2px);
 }
 
 .confess-btn:active {
-  transform: scale(0.97);
+  transform: translateY(1px) scale(0.965);
 }
 
 .confess-btn:focus-visible {
@@ -1742,16 +1819,16 @@ button {
 }
 
 .confess-reply {
-  margin-top: 14px;
-  min-height: 44px;
+  margin-top: 16px;
+  min-height: 52px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 6px;
   opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.45s ease, transform 0.45s ease;
+  transform: translateY(10px);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.3, 1);
   pointer-events: none;
 }
 
@@ -1779,11 +1856,12 @@ button {
   font-size: 19px;
   letter-spacing: 3px;
   color: #ffe2f0;
+  text-shadow: 0 8px 18px rgba(255, 105, 180, 0.12);
 }
 
 .reply-text.typed {
   display: inline-block;
-  animation: typeReveal 1.05s steps(9, end) 0.3s both;
+  animation: typeReveal 1.15s steps(9, end) 0.25s both;
 }
 
 @keyframes typeReveal {
@@ -1865,9 +1943,9 @@ button {
 .celebrate-glow {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 70%, rgba(255, 150, 200, 0.55), transparent 60%);
+  background: radial-gradient(circle at 50% 70%, rgba(255, 150, 200, 0.4), transparent 58%);
   opacity: 0;
-  animation: celebrateGlow 2.8s ease-out forwards;
+  animation: celebrateGlow 2.4s ease-out forwards;
 }
 
 @keyframes celebrateGlow {
@@ -1883,13 +1961,13 @@ button {
   margin: -11px 0 0 -11px;
   border: 2px solid rgba(255, 190, 225, 0.9);
   border-radius: 50%;
-  animation: celebrateRing 1.4s cubic-bezier(0.1, 0.6, 0.3, 1) forwards;
+  animation: celebrateRing 1.15s cubic-bezier(0.14, 0.6, 0.28, 1) forwards;
 }
 
 @keyframes celebrateRing {
   0% { transform: scale(0.3); opacity: 0; }
   15% { opacity: 1; }
-  100% { transform: scale(7); opacity: 0; }
+  100% { transform: scale(5.8); opacity: 0; }
 }
 
 .confess-burst {
@@ -1897,7 +1975,7 @@ button {
   color: #ff9ed1;
   transform: translate(-50%, -50%);
   text-shadow: 0 0 10px #ff5fa8;
-  animation: confessBurst 1.2s ease-out forwards;
+  animation: confessBurst 1.05s ease-out forwards;
 }
 
 @keyframes confessBurst {
@@ -1916,7 +1994,7 @@ button {
   border-radius: 50%;
   background: radial-gradient(circle, #ffffff 0 35%, #ffe6a8 60%, transparent 70%);
   filter: drop-shadow(0 0 6px #ffd36e);
-  animation: celebrateSpark 2.2s ease-out forwards;
+  animation: celebrateSpark 1.7s ease-out forwards;
 }
 
 @keyframes celebrateSpark {
@@ -2064,7 +2142,7 @@ button {
 
 /* ================= 动画 ================= */
 @keyframes pageFade {
-  from { opacity: 0; transform: scale(0.985); }
+  from { opacity: 0; transform: translateY(10px) scale(0.988); }
   to { opacity: 1; transform: none; }
 }
 
@@ -2332,6 +2410,7 @@ button {
   .girl-burst,
   .secret-star-shape,
   .secret-heart,
+  .bubble.show,
   .confess-mark,
   .reply-heart,
   .petal,
@@ -2342,6 +2421,11 @@ button {
   .celebrate-spark,
   .confess-btn.yes,
   .reply-date {
+    animation: none !important;
+  }
+
+  .save-day.show,
+  .confess-btn.yes::after {
     animation: none !important;
   }
 
@@ -3070,12 +3154,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     tipTimer = setTimeout(function () {
       selectTip.classList.add('show');
-    }, 500);
+    }, 380);
 
     bubbleTimer = setTimeout(function () {
       bubbleL.classList.add('show');
       bubbleR.classList.add('show');
-    }, 1600);
+    }, 1180);
   }
 
   function showPage3Left() {
@@ -3522,16 +3606,16 @@ document.addEventListener('DOMContentLoaded', function () {
     const cx = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
     const cy = rect ? rect.top + rect.height / 2 : window.innerHeight * 0.7;
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 2; i++) {
       const ring = document.createElement('span');
       ring.className = 'celebrate-ring';
       ring.style.left = cx + 'px';
       ring.style.top = cy + 'px';
-      ring.style.animationDelay = (i * 0.16) + 's';
+      ring.style.animationDelay = (i * 0.14) + 's';
       layer.appendChild(ring);
     }
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 8; i++) {
       const h = document.createElement('span');
       h.className = 'confess-burst';
       h.textContent = '♡';
@@ -3539,7 +3623,7 @@ document.addEventListener('DOMContentLoaded', function () {
       h.style.left = cx + 'px';
       h.style.top = cy + 'px';
       const ang = -Math.PI / 2 + (Math.random() - 0.5) * 2.4;
-      const dist = 70 + Math.random() * 120;
+      const dist = 56 + Math.random() * 90;
       h.style.setProperty('--bx', Math.round(Math.cos(ang) * dist) + 'px');
       h.style.setProperty('--by', Math.round(Math.sin(ang) * dist) + 'px');
       h.style.fontSize = (10 + Math.random() * 12) + 'px';
@@ -3547,19 +3631,19 @@ document.addEventListener('DOMContentLoaded', function () {
       layer.appendChild(h);
     }
 
-    for (let i = 0; i < 16; i++) {
+    for (let i = 0; i < 10; i++) {
       const spark = document.createElement('span');
       spark.className = 'celebrate-spark';
       spark.style.left = (8 + Math.random() * 84) + '%';
       spark.style.top = (28 + Math.random() * 55) + '%';
       spark.style.setProperty('--sx', Math.round(Math.random() * 60 - 30) + 'px');
       spark.style.setProperty('--sy', Math.round(-40 - Math.random() * 90) + 'px');
-      spark.style.animationDelay = (Math.random() * 0.8) + 's';
+      spark.style.animationDelay = (Math.random() * 0.55) + 's';
       layer.appendChild(spark);
     }
 
     const colors = ['#ff8fc0', '#ffb3d1', '#ff6fa8', '#ffe0ef', '#ff9ed1', '#ffd36e'];
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 20; i++) {
       const petal = document.createElement('span');
       petal.className = 'petal';
       petal.style.left = Math.random() * 100 + '%';
@@ -3568,23 +3652,23 @@ document.addEventListener('DOMContentLoaded', function () {
       petal.style.background = colors[i % colors.length];
       petal.style.setProperty('--drift', (Math.random() * 180 - 90) + 'px');
       petal.style.setProperty('--rot', (180 + Math.random() * 360) + 'deg');
-      petal.style.animationDelay = (Math.random() * 0.9) + 's';
-      petal.style.animationDuration = (3.4 + Math.random() * 2) + 's';
+      petal.style.animationDelay = (Math.random() * 0.75) + 's';
+      petal.style.animationDuration = (3.1 + Math.random() * 1.8) + 's';
       layer.appendChild(petal);
     }
 
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 8; i++) {
       const h = document.createElement('span');
       h.className = 'celebrate-heart';
       h.textContent = '♡';
       h.setAttribute('aria-hidden', 'true');
       h.style.left = (5 + Math.random() * 90) + '%';
       h.style.fontSize = (12 + Math.random() * 16) + 'px';
-      h.style.animationDelay = (Math.random() * 1.2) + 's';
+      h.style.animationDelay = (Math.random() * 0.8) + 's';
       layer.appendChild(h);
     }
 
-    setTimeout(function () { layer.remove(); }, 6500);
+    setTimeout(function () { layer.remove(); }, 5200);
   }
 
   if (confessYes && confessNo && confessReply) {
