@@ -2199,6 +2199,151 @@ button {
   color: #ffe3f1;
 }
 
+.game-panel {
+  margin: 14px auto 0;
+  padding: 16px 18px 18px;
+  width: min(100%, 420px);
+  border: 1px solid rgba(255, 195, 228, 0.14);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(132, 188, 255, 0.03));
+  box-shadow:
+    0 10px 30px rgba(22, 8, 38, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.game-panel[hidden] {
+  display: none;
+}
+
+.game-intro {
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(255, 222, 239, 0.78);
+}
+
+.game-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.game-score {
+  font-size: 14px;
+  letter-spacing: 1px;
+  color: #ffe8f4;
+}
+
+.game-btn {
+  padding: 10px 18px;
+  border: 1px solid rgba(255, 205, 231, 0.22);
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 156, 206, 0.18), rgba(255, 255, 255, 0.06));
+  color: #fff0f8;
+  box-shadow: 0 10px 24px rgba(22, 8, 38, 0.14);
+  transition: transform 0.24s ease, box-shadow 0.24s ease, background 0.24s ease;
+}
+
+.game-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(22, 8, 38, 0.18);
+}
+
+.game-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.game-area {
+  position: relative;
+  height: 240px;
+  margin-top: 14px;
+  border: 1px solid rgba(255, 205, 231, 0.14);
+  border-radius: 22px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 25%, rgba(255, 221, 242, 0.18), transparent 28%),
+    linear-gradient(180deg, rgba(31, 14, 54, 0.96), rgba(18, 8, 36, 0.98));
+  box-shadow:
+    inset 0 0 40px rgba(255, 158, 209, 0.08),
+    0 10px 24px rgba(18, 8, 34, 0.18);
+}
+
+.game-area::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(255, 255, 255, 0.8) 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 22%, rgba(255, 255, 255, 0.7) 0 1.2px, transparent 2.2px),
+    radial-gradient(circle at 48% 65%, rgba(255, 214, 238, 0.6) 0 1px, transparent 2px),
+    radial-gradient(circle at 84% 76%, rgba(255, 255, 255, 0.72) 0 1.1px, transparent 2.2px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.game-status {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: rgba(26, 10, 44, 0.56);
+  backdrop-filter: blur(8px);
+  color: rgba(255, 230, 243, 0.88);
+  font-size: 13px;
+  line-height: 1.6;
+  z-index: 2;
+}
+
+.catch-star {
+  position: absolute;
+  top: -28px;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, #fffefc 0 24%, #ffe59d 30%, #ffd06d 55%, rgba(255, 208, 109, 0.12) 72%, transparent 74%);
+  box-shadow:
+    0 0 16px rgba(255, 212, 120, 0.55),
+    0 0 34px rgba(255, 156, 206, 0.22);
+  animation: catchStarFall linear forwards;
+  z-index: 1;
+}
+
+.catch-star::before,
+.catch-star::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(255, 243, 214, 0.95), transparent);
+  transform: translate(-50%, -50%);
+}
+
+.catch-star::after {
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.catch-star.hit {
+  animation: none;
+  transform: scale(1.35);
+  opacity: 0;
+  transition: transform 0.22s ease, opacity 0.22s ease;
+}
+
+@keyframes catchStarFall {
+  from { transform: translateY(0) scale(0.75); opacity: 0; }
+  12% { opacity: 1; }
+  to { transform: translateY(236px) scale(1); opacity: 0.92; }
+}
+
 .confession.answered .confess-actions {
   animation: none !important;
   opacity: 0;
@@ -2737,7 +2882,8 @@ button {
   }
 
   .save-day.show,
-  .confess-btn.yes::after {
+  .confess-btn.yes::after,
+  .catch-star {
     animation: none !important;
   }
 
@@ -2782,6 +2928,19 @@ button {
 
   .memory-star {
     transition-duration: 0.01ms !important;
+  }
+
+  .memory-stars {
+    grid-template-columns: 1fr;
+  }
+
+  .game-meta {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .game-area {
+    height: 224px;
   }
 }
 </style>
@@ -3239,6 +3398,17 @@ button {
         <div class="timeline-label">回忆星球</div>
         <div class="memory-intro">把那些值得反复想起的时刻，收进这片小小的宇宙里。</div>
         <div class="memory-stars" id="memoryStars"></div>
+      </div>
+      <div class="game-panel" id="gamePanel" hidden>
+        <div class="timeline-label">点亮星空</div>
+        <div class="game-intro">轻轻点住掉落的星星，点亮 12 颗之后，这片宇宙会把偏爱说给她听。</div>
+        <div class="game-meta">
+          <div class="game-score" id="gameScore">已点亮 0 / 12</div>
+          <button class="game-btn" id="gameStartBtn" type="button">开始点亮</button>
+        </div>
+        <div class="game-area" id="gameArea">
+          <div class="game-status" id="gameStatus">准备好了就开始吧，星星会慢慢落下来。</div>
+        </div>
       </div>
       <button class="save-day" id="saveDay" type="button" hidden>保存今天</button>
     </section>
@@ -3864,6 +4034,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const memoryModalDesc = $('memoryModalDesc');
   const memoryModalImage = $('memoryModalImage');
   const memoryModalClose = $('memoryModalClose');
+  const gamePanel = $('gamePanel');
+  const gameArea = $('gameArea');
+  const gameStatus = $('gameStatus');
+  const gameScore = $('gameScore');
+  const gameStartBtn = $('gameStartBtn');
   const saveDay = $('saveDay');
   const saveModal = $('saveModal');
   const saveImage = $('saveImage');
@@ -3876,6 +4051,11 @@ document.addEventListener('DOMContentLoaded', function () {
   let supabaseClient = null;
   let timelineItems = [];
   let memoryStarsData = [];
+  let gameRunning = false;
+  let gameScoreValue = 0;
+  let gameTarget = 12;
+  let gameSpawnTimer = null;
+  let gameStopTimer = null;
 
   function pad(n) {
     return String(n).padStart(2, '0');
@@ -4061,6 +4241,95 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function setGameStatus(text) {
+    if (gameStatus) gameStatus.textContent = text;
+  }
+
+  function setGameScore(value) {
+    gameScoreValue = value;
+    if (gameScore) gameScore.textContent = '已点亮 ' + value + ' / ' + gameTarget;
+  }
+
+  function clearGameStars() {
+    if (!gameArea) return;
+    gameArea.querySelectorAll('.catch-star').forEach(function (star) {
+      star.remove();
+    });
+  }
+
+  function stopStarGame(finished) {
+    clearInterval(gameSpawnTimer);
+    clearTimeout(gameStopTimer);
+    gameSpawnTimer = null;
+    gameStopTimer = null;
+    gameRunning = false;
+    if (gameStartBtn) gameStartBtn.textContent = finished ? '再点亮一次' : '重新开始';
+  }
+
+  function finishStarGame(success) {
+    clearGameStars();
+    stopStarGame(true);
+    if (success) {
+      setGameStatus('你已经点亮了我的整个宇宙。');
+    } else {
+      setGameStatus('差一点就点亮整片星空了，再试一次吧。');
+    }
+  }
+
+  function spawnCatchStar() {
+    if (!gameArea || !gameRunning) return;
+    const star = document.createElement('button');
+    star.className = 'catch-star';
+    star.type = 'button';
+    star.setAttribute('aria-label', '点亮一颗星星');
+    star.style.left = (8 + Math.random() * 84) + '%';
+    const duration = reduceMotion ? 4.8 : (2.8 + Math.random() * 1.5);
+    star.style.animationDuration = duration + 's';
+    if (reduceMotion) {
+      star.style.top = (20 + Math.random() * 55) + 'px';
+    }
+
+    let removed = false;
+    function removeStar() {
+      if (removed) return;
+      removed = true;
+      star.remove();
+    }
+
+    star.addEventListener('click', function () {
+      if (!gameRunning) return;
+      setGameScore(gameScoreValue + 1);
+      star.classList.add('hit');
+      setTimeout(removeStar, 180);
+      if (gameScoreValue >= gameTarget) {
+        finishStarGame(true);
+      } else {
+        setGameStatus('星光正在靠近她，再点亮几颗。');
+      }
+    });
+
+    gameArea.appendChild(star);
+    setTimeout(removeStar, (duration + 0.35) * 1000);
+  }
+
+  function startStarGame() {
+    if (!gamePanel || !gameArea) return;
+    gamePanel.hidden = false;
+    clearGameStars();
+    clearInterval(gameSpawnTimer);
+    clearTimeout(gameStopTimer);
+    gameRunning = true;
+    setGameScore(0);
+    setGameStatus('开始了，去接住那些朝她落下来的星光。');
+    if (gameStartBtn) gameStartBtn.textContent = '进行中...';
+
+    spawnCatchStar();
+    gameSpawnTimer = setInterval(spawnCatchStar, reduceMotion ? 950 : 620);
+    gameStopTimer = setTimeout(function () {
+      if (gameRunning) finishStarGame(gameScoreValue >= gameTarget);
+    }, reduceMotion ? 18000 : 14000);
+  }
+
   function showSaveDayButton() {
     if (!saveDay) return;
     saveDay.hidden = false;
@@ -4106,6 +4375,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     renderTimeline();
     renderMemoryStars();
+    if (gamePanel) gamePanel.hidden = false;
 
     showSaveDayButton();
   }
@@ -4314,6 +4584,9 @@ document.addEventListener('DOMContentLoaded', function () {
     memoryModal.addEventListener('click', function (e) {
       if (e.target === memoryModal) memoryModal.close();
     });
+  }
+  if (gameStartBtn) {
+    gameStartBtn.addEventListener('click', startStarGame);
   }
 
   bootstrapAnniversary();
