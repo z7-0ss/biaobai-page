@@ -3911,6 +3911,22 @@ document.addEventListener('DOMContentLoaded', function () {
     return getElapsedParts(startAt).days + 1;
   }
 
+  function normalizeTimelineItems(items) {
+    const sorted = (items || []).slice().sort(function (a, b) {
+      if ((a.milestone_day || 0) !== (b.milestone_day || 0)) {
+        return (a.milestone_day || 0) - (b.milestone_day || 0);
+      }
+      return (b.id || 0) - (a.id || 0);
+    });
+    const seen = new Set();
+    return sorted.filter(function (item) {
+      const day = item.milestone_day;
+      if (seen.has(day)) return false;
+      seen.add(day);
+      return true;
+    });
+  }
+
   function buildCounterText(startAt) {
     const parts = getElapsedParts(startAt);
     return '已经一起走过 ' +
@@ -3934,9 +3950,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function renderTimeline() {
     if (!timelinePanel || !timelineCurrent || !timelineTrack || !anniversaryRecord) return;
 
-    const items = (timelineItems && timelineItems.length ? timelineItems : DEFAULT_TIMELINE_ITEMS)
-      .slice()
-      .sort(function (a, b) { return a.milestone_day - b.milestone_day; });
+    const items = normalizeTimelineItems(timelineItems && timelineItems.length ? timelineItems : DEFAULT_TIMELINE_ITEMS);
     const dayCount = getDayCount(anniversaryRecord.started_at);
     let currentIndex = -1;
 
@@ -4113,10 +4127,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!client) return DEFAULT_TIMELINE_ITEMS;
     const { data, error } = await client
       .from('love_timeline')
-      .select('milestone_day, title, description')
-      .order('milestone_day', { ascending: true });
+      .select('id, milestone_day, title, description')
+      .order('milestone_day', { ascending: true })
+      .order('id', { ascending: false });
     if (error) throw error;
-    return data && data.length ? data : DEFAULT_TIMELINE_ITEMS;
+    return data && data.length ? normalizeTimelineItems(data) : DEFAULT_TIMELINE_ITEMS;
   }
 
   async function fetchMemoryStars() {
