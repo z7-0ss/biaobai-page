@@ -1887,6 +1887,53 @@ button {
   color: rgba(255, 214, 234, 0.82);
 }
 
+.anniversary-panel {
+  margin: 16px auto 0;
+  padding: 16px 18px;
+  width: min(100%, 420px);
+  border: 1px solid rgba(255, 195, 228, 0.18);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 160, 210, 0.03));
+  box-shadow:
+    0 10px 30px rgba(25, 8, 39, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.anniversary-panel[hidden] {
+  display: none;
+}
+
+.anniversary-label {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: rgba(255, 214, 234, 0.58);
+}
+
+.anniversary-start {
+  margin-top: 8px;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: #ffe6f2;
+}
+
+.anniversary-counter {
+  margin-top: 10px;
+  font-size: 18px;
+  line-height: 1.7;
+  letter-spacing: 1px;
+  color: #ffd9eb;
+  text-shadow: 0 8px 16px rgba(255, 105, 180, 0.12);
+}
+
+.anniversary-tip {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.7;
+  letter-spacing: 1px;
+  color: rgba(255, 214, 234, 0.62);
+}
+
 .confession.answered .confess-actions {
   animation: none !important;
   opacity: 0;
@@ -2909,6 +2956,12 @@ button {
         <button class="confess-btn think" id="confessNo" type="button">再想想</button>
       </div>
       <div class="confess-reply" id="confessReply" role="status" aria-live="polite"></div>
+      <div class="anniversary-panel" id="anniversaryPanel" hidden>
+        <div class="anniversary-label">从这一刻开始</div>
+        <div class="anniversary-start" id="anniversaryStart">--</div>
+        <div class="anniversary-counter" id="anniversaryCounter">正在读取纪念时间...</div>
+        <p class="anniversary-tip" id="anniversaryTip">以后不管换哪台设备打开，都会从同一个开始时间继续计算。</p>
+      </div>
       <button class="save-day" id="saveDay" type="button" hidden>保存今天</button>
     </section>
   </article>
@@ -2934,9 +2987,17 @@ button {
     </div>
   </dialog>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   'use strict';
+
+  const SUPABASE_CONFIG = {
+    url: 'https://kdxtpuuneklazrhonecu.supabase.co',
+    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtkeHRwdXVuZWtsYXpyaG9uZWN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5MDc1NTUsImV4cCI6MjEwODQ4MzU1NX0.NafZQ74hdXU2xYqBPMeA_TMCJOUW6Tcz1nFModtiCmA',
+    table: 'love_milestones',
+    key: 'relationship_start'
+  };
 
   const $ = (id) => document.getElementById(id);
 
@@ -3458,17 +3519,168 @@ document.addEventListener('DOMContentLoaded', function () {
   const confessYes = $('confessYes');
   const confessNo = $('confessNo');
   const confessReply = $('confessReply');
+  const anniversaryPanel = $('anniversaryPanel');
+  const anniversaryStart = $('anniversaryStart');
+  const anniversaryCounter = $('anniversaryCounter');
+  const anniversaryTip = $('anniversaryTip');
   const saveDay = $('saveDay');
   const saveModal = $('saveModal');
   const saveImage = $('saveImage');
   const saveDownload = $('saveDownload');
   const saveClose = $('saveClose');
   let confessed = false;
+  let confirmSubmitting = false;
+  let anniversaryRecord = null;
+  let anniversaryTimer = null;
+  let supabaseClient = null;
+
+  function pad(n) {
+    return String(n).padStart(2, '0');
+  }
 
   function formatToday() {
     const d = new Date();
-    const p = function (n) { return String(n).padStart(2, '0'); };
-    return d.getFullYear() + '.' + p(d.getMonth() + 1) + '.' + p(d.getDate());
+    return d.getFullYear() + '.' + pad(d.getMonth() + 1) + '.' + pad(d.getDate());
+  }
+
+  function formatDate(dateLike) {
+    const d = dateLike instanceof Date ? dateLike : new Date(dateLike);
+    return d.getFullYear() + '.' + pad(d.getMonth() + 1) + '.' + pad(d.getDate());
+  }
+
+  function formatDateTime(dateLike) {
+    const d = dateLike instanceof Date ? dateLike : new Date(dateLike);
+    return formatDate(d) + ' ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+  }
+
+  function getElapsedParts(startAt) {
+    const start = startAt instanceof Date ? startAt : new Date(startAt);
+    const diffMs = Math.max(0, Date.now() - start.getTime());
+    const totalSeconds = Math.floor(diffMs / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return { days, hours, minutes, seconds };
+  }
+
+  function getDayCount(startAt) {
+    return getElapsedParts(startAt).days + 1;
+  }
+
+  function buildCounterText(startAt) {
+    const parts = getElapsedParts(startAt);
+    return '已经一起走过 ' +
+      parts.days + ' 天 ' +
+      pad(parts.hours) + ' 小时 ' +
+      pad(parts.minutes) + ' 分 ' +
+      pad(parts.seconds) + ' 秒';
+  }
+
+  function updateAnniversaryCounter() {
+    if (!anniversaryRecord || !anniversaryCounter) return;
+    anniversaryCounter.textContent = buildCounterText(anniversaryRecord.started_at);
+  }
+
+  function startAnniversaryCounter() {
+    clearInterval(anniversaryTimer);
+    updateAnniversaryCounter();
+    anniversaryTimer = setInterval(updateAnniversaryCounter, 1000);
+  }
+
+  function showSaveDayButton() {
+    if (!saveDay) return;
+    saveDay.hidden = false;
+    void saveDay.offsetWidth;
+    saveDay.classList.add('show');
+  }
+
+  function setConfirmButtonsBusy(busy) {
+    if (confessYes) confessYes.disabled = busy;
+    if (confessNo) confessNo.disabled = busy;
+  }
+
+  function showStatusMessage(text, kind) {
+    if (!confessReply) return;
+    confessReply.className = 'confess-reply show' + (kind === 'wait' ? ' wait' : '');
+    confessReply.innerHTML = '<span class="reply-text">' + text + '</span>';
+  }
+
+  function renderAnniversary(record, options) {
+    if (!record || !record.started_at) return;
+    anniversaryRecord = record;
+    confessed = true;
+    confession.classList.add('answered');
+
+    const startAt = new Date(record.started_at);
+    const dayCount = getDayCount(startAt);
+    const replyText = options && options.justConfirmed
+      ? '那今天就是第一天'
+      : '今天是我们在一起的第 ' + dayCount + ' 天';
+    const typedClass = options && options.justConfirmed ? ' typed' : '';
+
+    confessReply.className = 'confess-reply show';
+    confessReply.innerHTML =
+      '<span class="reply-heart" aria-hidden="true">♡</span>' +
+      '<span class="reply-text' + typedClass + '">' + replyText + '</span>' +
+      '<span class="reply-date">' + formatDateTime(startAt) + '</span>';
+
+    if (anniversaryPanel && anniversaryStart && anniversaryCounter && anniversaryTip) {
+      anniversaryPanel.hidden = false;
+      anniversaryStart.textContent = formatDateTime(startAt);
+      anniversaryTip.textContent = '以后不管换哪台设备打开，都会从这个时间继续往后算。';
+      startAnniversaryCounter();
+    }
+
+    showSaveDayButton();
+  }
+
+  function hasSupabaseConfig() {
+    return Boolean(SUPABASE_CONFIG.url && SUPABASE_CONFIG.anonKey);
+  }
+
+  function getSupabaseClient() {
+    if (supabaseClient) return supabaseClient;
+    if (!hasSupabaseConfig()) return null;
+    if (!window.supabase || typeof window.supabase.createClient !== 'function') return null;
+    supabaseClient = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+    return supabaseClient;
+  }
+
+  async function fetchAnniversaryRecord() {
+    const client = getSupabaseClient();
+    if (!client) return null;
+    const { data, error } = await client
+      .from(SUPABASE_CONFIG.table)
+      .select('milestone_key, started_at, created_at')
+      .eq('milestone_key', SUPABASE_CONFIG.key)
+      .maybeSingle();
+    if (error) throw error;
+    return data;
+  }
+
+  async function createAnniversaryRecord(startedAt) {
+    const client = getSupabaseClient();
+    if (!client) throw new Error('missing_supabase_config');
+    const payload = {
+      milestone_key: SUPABASE_CONFIG.key,
+      started_at: startedAt
+    };
+    const { error } = await client
+      .from(SUPABASE_CONFIG.table)
+      .insert(payload);
+    if (error && error.code !== '23505') throw error;
+    return fetchAnniversaryRecord();
+  }
+
+  async function bootstrapAnniversary() {
+    if (!hasSupabaseConfig()) return;
+    try {
+      const record = await fetchAnniversaryRecord();
+      if (record) renderAnniversary(record);
+    } catch (error) {
+      console.error('读取纪念时间失败:', error);
+    }
   }
 
   function drawDayHeart(ctx, x, y, size) {
@@ -3523,13 +3735,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     ctx.textAlign = 'center';
 
+    const startAt = anniversaryRecord && anniversaryRecord.started_at ? new Date(anniversaryRecord.started_at) : new Date();
+    const dayTitle = '第 ' + getDayCount(startAt) + ' 天';
+
     ctx.fillStyle = '#ffe3f1';
     ctx.font = '600 76px "Songti SC", "STSong", "Noto Serif SC", serif';
-    ctx.fillText('第一天', W / 2, 240);
+    ctx.fillText(dayTitle, W / 2, 240);
 
     ctx.font = '28px "Songti SC", "STSong", "Noto Serif SC", serif';
     ctx.fillStyle = 'rgba(255, 200, 225, 0.82)';
-    ctx.fillText(formatToday(), W / 2, 310);
+    ctx.fillText(formatDateTime(startAt), W / 2, 310);
 
     ctx.strokeStyle = 'rgba(255, 190, 220, 0.32)';
     ctx.lineWidth = 1;
@@ -3560,10 +3775,11 @@ document.addEventListener('DOMContentLoaded', function () {
   function openSaveCard() {
     if (!saveModal || !saveImage || !saveDownload) return;
     const dataUrl = buildDayCard();
-    const date = formatToday();
+    const startAt = anniversaryRecord && anniversaryRecord.started_at ? new Date(anniversaryRecord.started_at) : new Date();
+    const date = formatDate(startAt);
     saveImage.src = dataUrl;
     saveDownload.href = dataUrl;
-    saveDownload.download = '第一天-' + date + '.jpg';
+    saveDownload.download = '纪念日-' + date + '.jpg';
     if (!saveModal.open) saveModal.showModal();
   }
 
@@ -3578,6 +3794,8 @@ document.addEventListener('DOMContentLoaded', function () {
       if (e.target === saveModal) closeSaveCard();
     });
   }
+
+  bootstrapAnniversary();
 
   // 滚到问句时逐层出现
   if (confession && 'IntersectionObserver' in window) {
@@ -3672,23 +3890,35 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   if (confessYes && confessNo && confessReply) {
-    confessYes.addEventListener('click', function () {
-      if (confessed) return;
-      confessed = true;
-      const rect = confessYes.getBoundingClientRect();
-      confession.classList.add('answered');
-      confessReply.className = 'confess-reply show';
-      confessReply.innerHTML =
-        '<span class="reply-heart" aria-hidden="true">♡</span>' +
-        '<span class="reply-text typed">那今天就是第一天</span>' +
-        '<span class="reply-date">' + formatToday() + '</span>';
-      if (saveDay) {
-        saveDay.hidden = false;
-        void saveDay.offsetWidth;
-        saveDay.classList.add('show');
+    confessYes.addEventListener('click', async function () {
+      if (confessed || confirmSubmitting) return;
+      if (!hasSupabaseConfig()) {
+        showStatusMessage('还没接好纪念数据库，先把 Supabase 的 URL 和 anon key 填进去。');
+        return;
       }
-      playChime();
-      celebrateYes(rect);
+
+      confirmSubmitting = true;
+      setConfirmButtonsBusy(true);
+
+      try {
+        const existing = await fetchAnniversaryRecord();
+        if (existing) {
+          renderAnniversary(existing);
+          return;
+        }
+
+        const rect = confessYes.getBoundingClientRect();
+        const created = await createAnniversaryRecord(new Date().toISOString());
+        renderAnniversary(created || { started_at: new Date().toISOString() }, { justConfirmed: true });
+        playChime();
+        celebrateYes(rect);
+      } catch (error) {
+        console.error('写入纪念时间失败:', error);
+        showStatusMessage('纪念时间写入失败了，等网络稳定一点我们再试一次，好吗？');
+      } finally {
+        confirmSubmitting = false;
+        setConfirmButtonsBusy(false);
+      }
     });
 
     confessNo.addEventListener('click', function () {
