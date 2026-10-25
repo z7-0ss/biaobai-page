@@ -3927,6 +3927,22 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function normalizeMemoryStars(items) {
+    const sorted = (items || []).slice().sort(function (a, b) {
+      if ((a.orbit_order || 0) !== (b.orbit_order || 0)) {
+        return (a.orbit_order || 0) - (b.orbit_order || 0);
+      }
+      return (b.id || 0) - (a.id || 0);
+    });
+    const seen = new Set();
+    return sorted.filter(function (item) {
+      const order = item.orbit_order || 0;
+      if (seen.has(order)) return false;
+      seen.add(order);
+      return true;
+    });
+  }
+
   function buildCounterText(startAt) {
     const parts = getElapsedParts(startAt);
     return '已经一起走过 ' +
@@ -3992,11 +4008,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function renderMemoryStars() {
     if (!memoryPanel || !memoryStarsBox) return;
-    const items = (memoryStarsData && memoryStarsData.length ? memoryStarsData : DEFAULT_MEMORY_STARS)
-      .slice()
-      .sort(function (a, b) {
-        return (a.orbit_order || 0) - (b.orbit_order || 0);
-      });
+    const items = normalizeMemoryStars(memoryStarsData && memoryStarsData.length ? memoryStarsData : DEFAULT_MEMORY_STARS);
 
     if (!items.length) {
       memoryPanel.hidden = true;
@@ -4139,10 +4151,11 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!client) return DEFAULT_MEMORY_STARS;
     const { data, error } = await client
       .from('memory_stars')
-      .select('title, memory_date, description, image_url, star_color, orbit_order')
-      .order('orbit_order', { ascending: true });
+      .select('id, title, memory_date, description, image_url, star_color, orbit_order')
+      .order('orbit_order', { ascending: true })
+      .order('id', { ascending: false });
     if (error) throw error;
-    return data && data.length ? data : DEFAULT_MEMORY_STARS;
+    return data && data.length ? normalizeMemoryStars(data) : DEFAULT_MEMORY_STARS;
   }
 
   async function createAnniversaryRecord(startedAt) {
