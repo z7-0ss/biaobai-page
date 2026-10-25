@@ -1926,6 +1926,113 @@ button {
   text-shadow: 0 8px 16px rgba(255, 105, 180, 0.12);
 }
 
+.timeline-panel {
+  margin: 14px auto 0;
+  padding: 16px 18px 14px;
+  width: min(100%, 420px);
+  border: 1px solid rgba(255, 195, 228, 0.14);
+  border-radius: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(171, 118, 221, 0.03));
+  box-shadow:
+    0 10px 30px rgba(23, 8, 38, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.timeline-panel[hidden] {
+  display: none;
+}
+
+.timeline-label {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: rgba(255, 214, 234, 0.58);
+}
+
+.timeline-current {
+  margin-top: 8px;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #ffe3f1;
+}
+
+.timeline-track {
+  margin-top: 16px;
+}
+
+.timeline-node {
+  position: relative;
+  padding: 0 0 18px 28px;
+}
+
+.timeline-node:last-child {
+  padding-bottom: 0;
+}
+
+.timeline-node::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 200, 230, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.04);
+}
+
+.timeline-node::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 18px;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(255, 182, 220, 0.36), rgba(255, 182, 220, 0.05));
+}
+
+.timeline-node:last-child::after {
+  display: none;
+}
+
+.timeline-node.is-active::before {
+  border-color: rgba(255, 188, 224, 0.78);
+  background: radial-gradient(circle, #fff7fb 0 34%, #ff8fc0 58%, #ff4f98 100%);
+  box-shadow:
+    0 0 0 4px rgba(255, 116, 182, 0.12),
+    0 0 16px rgba(255, 116, 182, 0.4);
+}
+
+.timeline-node.is-current::before {
+  box-shadow:
+    0 0 0 5px rgba(255, 116, 182, 0.16),
+    0 0 24px rgba(255, 116, 182, 0.52);
+}
+
+.timeline-day {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: rgba(255, 214, 234, 0.58);
+}
+
+.timeline-title {
+  margin-top: 4px;
+  font-size: 16px;
+  color: #ffe4f1;
+}
+
+.timeline-node.is-current .timeline-title {
+  color: #fff4fa;
+}
+
+.timeline-desc {
+  margin-top: 4px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(255, 218, 236, 0.72);
+}
+
 .confession.answered .confess-actions {
   animation: none !important;
   opacity: 0;
@@ -2953,6 +3060,11 @@ button {
         <div class="anniversary-start" id="anniversaryStart">--</div>
         <div class="anniversary-counter" id="anniversaryCounter">正在读取纪念时间...</div>
       </div>
+      <div class="timeline-panel" id="timelinePanel" hidden>
+        <div class="timeline-label">纪念时间轴</div>
+        <div class="timeline-current" id="timelineCurrent">正在展开这片星空...</div>
+        <div class="timeline-track" id="timelineTrack"></div>
+      </div>
       <button class="save-day" id="saveDay" type="button" hidden>保存今天</button>
     </section>
   </article>
@@ -2989,6 +3101,14 @@ document.addEventListener('DOMContentLoaded', function () {
     table: 'love_milestones',
     key: 'relationship_start'
   };
+
+  const DEFAULT_TIMELINE_ITEMS = [
+    { milestone_day: 1, title: '第一天', description: '故事从这一天开始。' },
+    { milestone_day: 7, title: '第 7 天', description: '第一个小小的节点，被宇宙认真记住。' },
+    { milestone_day: 30, title: '第 30 天', description: '已经一起走过一个月了。' },
+    { milestone_day: 100, title: '第 100 天', description: '这一百天，足够让星光有了名字。' },
+    { milestone_day: 365, title: '一周年', description: '这一年，足够让我更确定你就是偏爱。' }
+  ];
 
   const $ = (id) => document.getElementById(id);
 
@@ -3513,6 +3633,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const anniversaryPanel = $('anniversaryPanel');
   const anniversaryStart = $('anniversaryStart');
   const anniversaryCounter = $('anniversaryCounter');
+  const timelinePanel = $('timelinePanel');
+  const timelineCurrent = $('timelineCurrent');
+  const timelineTrack = $('timelineTrack');
   const saveDay = $('saveDay');
   const saveModal = $('saveModal');
   const saveImage = $('saveImage');
@@ -3523,6 +3646,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let anniversaryRecord = null;
   let anniversaryTimer = null;
   let supabaseClient = null;
+  let timelineItems = [];
 
   function pad(n) {
     return String(n).padStart(2, '0');
@@ -3578,6 +3702,51 @@ document.addEventListener('DOMContentLoaded', function () {
     anniversaryTimer = setInterval(updateAnniversaryCounter, 1000);
   }
 
+  function renderTimeline() {
+    if (!timelinePanel || !timelineCurrent || !timelineTrack || !anniversaryRecord) return;
+
+    const items = (timelineItems && timelineItems.length ? timelineItems : DEFAULT_TIMELINE_ITEMS)
+      .slice()
+      .sort(function (a, b) { return a.milestone_day - b.milestone_day; });
+    const dayCount = getDayCount(anniversaryRecord.started_at);
+    let currentIndex = -1;
+
+    items.forEach(function (item, index) {
+      if (dayCount >= item.milestone_day) currentIndex = index;
+    });
+
+    timelinePanel.hidden = false;
+    timelineCurrent.textContent = '今天是我们在一起的第 ' + dayCount + ' 天';
+    timelineTrack.replaceChildren();
+
+    items.forEach(function (item, index) {
+      const node = document.createElement('div');
+      const active = dayCount >= item.milestone_day;
+      const current = index === currentIndex;
+      node.className = 'timeline-node' + (active ? ' is-active' : '') + (current ? ' is-current' : '');
+
+      const day = document.createElement('div');
+      day.className = 'timeline-day';
+      day.textContent = '第 ' + item.milestone_day + ' 天';
+
+      const title = document.createElement('div');
+      title.className = 'timeline-title';
+      title.textContent = item.title;
+
+      node.appendChild(day);
+      node.appendChild(title);
+
+      if (item.description) {
+        const desc = document.createElement('div');
+        desc.className = 'timeline-desc';
+        desc.textContent = item.description;
+        node.appendChild(desc);
+      }
+
+      timelineTrack.appendChild(node);
+    });
+  }
+
   function showSaveDayButton() {
     if (!saveDay) return;
     saveDay.hidden = false;
@@ -3621,6 +3790,8 @@ document.addEventListener('DOMContentLoaded', function () {
       startAnniversaryCounter();
     }
 
+    renderTimeline();
+
     showSaveDayButton();
   }
 
@@ -3648,6 +3819,17 @@ document.addEventListener('DOMContentLoaded', function () {
     return data;
   }
 
+  async function fetchTimelineItems() {
+    const client = getSupabaseClient();
+    if (!client) return DEFAULT_TIMELINE_ITEMS;
+    const { data, error } = await client
+      .from('love_timeline')
+      .select('milestone_day, title, description')
+      .order('milestone_day', { ascending: true });
+    if (error) throw error;
+    return data && data.length ? data : DEFAULT_TIMELINE_ITEMS;
+  }
+
   async function createAnniversaryRecord(startedAt) {
     const client = getSupabaseClient();
     if (!client) throw new Error('missing_supabase_config');
@@ -3664,6 +3846,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
   async function bootstrapAnniversary() {
     if (!hasSupabaseConfig()) return;
+    try {
+      timelineItems = await fetchTimelineItems();
+    } catch (error) {
+      console.error('读取时间轴失败:', error);
+      timelineItems = DEFAULT_TIMELINE_ITEMS;
+    }
+
     try {
       const record = await fetchAnniversaryRecord();
       if (record) renderAnniversary(record);
