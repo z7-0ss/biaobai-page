@@ -1926,14 +1926,6 @@ button {
   text-shadow: 0 8px 16px rgba(255, 105, 180, 0.12);
 }
 
-.anniversary-tip {
-  margin-top: 8px;
-  font-size: 12px;
-  line-height: 1.7;
-  letter-spacing: 1px;
-  color: rgba(255, 214, 234, 0.62);
-}
-
 .confession.answered .confess-actions {
   animation: none !important;
   opacity: 0;
@@ -2957,10 +2949,9 @@ button {
       </div>
       <div class="confess-reply" id="confessReply" role="status" aria-live="polite"></div>
       <div class="anniversary-panel" id="anniversaryPanel" hidden>
-        <div class="anniversary-label">从这一刻开始</div>
+        <div class="anniversary-label">我们的开始时间</div>
         <div class="anniversary-start" id="anniversaryStart">--</div>
         <div class="anniversary-counter" id="anniversaryCounter">正在读取纪念时间...</div>
-        <p class="anniversary-tip" id="anniversaryTip">以后不管换哪台设备打开，都会从同一个开始时间继续计算。</p>
       </div>
       <button class="save-day" id="saveDay" type="button" hidden>保存今天</button>
     </section>
@@ -3522,7 +3513,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const anniversaryPanel = $('anniversaryPanel');
   const anniversaryStart = $('anniversaryStart');
   const anniversaryCounter = $('anniversaryCounter');
-  const anniversaryTip = $('anniversaryTip');
   const saveDay = $('saveDay');
   const saveModal = $('saveModal');
   const saveImage = $('saveImage');
@@ -3625,10 +3615,9 @@ document.addEventListener('DOMContentLoaded', function () {
       '<span class="reply-text' + typedClass + '">' + replyText + '</span>' +
       '<span class="reply-date">' + formatDateTime(startAt) + '</span>';
 
-    if (anniversaryPanel && anniversaryStart && anniversaryCounter && anniversaryTip) {
+    if (anniversaryPanel && anniversaryStart && anniversaryCounter) {
       anniversaryPanel.hidden = false;
       anniversaryStart.textContent = formatDateTime(startAt);
-      anniversaryTip.textContent = '以后不管换哪台设备打开，都会从这个时间继续往后算。';
       startAnniversaryCounter();
     }
 
