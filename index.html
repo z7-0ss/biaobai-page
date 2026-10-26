@@ -4179,6 +4179,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!letterSealOpened) openWaxSeal();
     else if (waxSealOverlay) waxSealOverlay.classList.remove('show', 'breaking');
     if (confession) confession.classList.add('in-view');
+    setMusicProfile('letter');
 
     if (!reduceMotion) {
       letterStarTimer = setInterval(function () { createFallStar(letterFallStar); }, 340);
@@ -4188,6 +4189,8 @@ document.addEventListener('DOMContentLoaded', function () {
   function showGamePage() {
     clearLetterStars();
     letterScrollBeforeGame = pages.letter ? pages.letter.scrollTop : 0;
+    setMusicProfile('game');
+    playSceneLift();
     activatePage('game');
   }
 
@@ -4250,41 +4253,65 @@ document.addEventListener('DOMContentLoaded', function () {
   const musicBtn = $('musicBtn');
   const musicNotes = {
     C3: 130.81, G3: 196.0,
+    C4: 261.63, D4: 293.66, E4: 329.63, G4: 392.0, A4: 440.0,
     C5: 523.25, D5: 587.33, E5: 659.25, G5: 783.99, A5: 880.0,
-    C6: 1046.5, E6: 1318.51
+    C6: 1046.5, E6: 1318.51, G6: 1567.98
   };
-  const musicMelody = ['C5', 'E5', 'G5', null, 'A5', 'G5', 'E5', null, 'C5', 'G5', 'A5', 'C6', null, 'G5', 'E5', 'D5'];
+  const musicProfiles = {
+    letter: {
+      melody: ['C5', null, 'E5', null, 'G5', null, 'A5', null, 'G5', null, 'E5', null, 'D5', null, 'C5', null],
+      interval: 620,
+      melodyDur: 2.15,
+      melodyVol: 0.058,
+      bassEvery: 8,
+      bassDur: 4.8,
+      bassVol: 0.026
+    },
+    game: {
+      melody: ['C5', 'E5', 'G5', null, 'A5', 'G5', 'E5', null, 'C6', 'A5', 'G5', 'E5', null, 'D5', 'E5', null],
+      interval: 430,
+      melodyDur: 1.35,
+      melodyVol: 0.076,
+      bassEvery: 8,
+      bassDur: 3.8,
+      bassVol: 0.032
+    }
+  };
 
   let audioCtx = null;
   let masterGain = null;
+  let fxGain = null;
   let musicTimer = null;
   let musicStep = 0;
   let musicOn = true;
   let audioUnlocked = false;
+  let currentMusicProfile = 'letter';
 
-  function playMusicNote(freq, time, dur, vol) {
+  function playMusicNote(freq, time, dur, vol, opts) {
     if (!audioCtx || !masterGain) return;
+    const options = opts || {};
+    const targetGain = options.fx ? (fxGain || masterGain) : masterGain;
     const osc = audioCtx.createOscillator();
     const gain = audioCtx.createGain();
-    osc.type = 'sine';
+    osc.type = options.type || 'triangle';
     osc.frequency.value = freq;
     gain.gain.setValueAtTime(0.0001, time);
-    gain.gain.linearRampToValueAtTime(vol, time + 0.008);
+    gain.gain.linearRampToValueAtTime(vol, time + (options.attack || 0.018));
     gain.gain.exponentialRampToValueAtTime(0.0001, time + dur);
     osc.connect(gain);
-    gain.connect(masterGain);
+    gain.connect(targetGain);
     osc.start(time);
     osc.stop(time + dur + 0.05);
 
     const upper = audioCtx.createOscillator();
     const upperGain = audioCtx.createGain();
-    upper.type = 'sine';
-    upper.frequency.value = freq * 2.004;
+    upper.type = options.upperType || 'sine';
+    upper.frequency.value = freq * (options.upperRatio || 2.004);
     upperGain.gain.setValueAtTime(0.0001, time);
-    upperGain.gain.linearRampToValueAtTime(vol * 0.16, time + 0.005);
-    upperGain.gain.exponentialRampToValueAtTime(0.0001, time + dur * 0.55);
+    upperGain.gain.linearRampToValueAtTime(vol * (options.upperVol || 0.16), time + 0.01);
+    upperGain.gain.exponentialRampToValueAtTime(0.0001, time + dur * (options.upperDur || 0.55));
     upper.connect(upperGain);
-    upperGain.connect(masterGain);
+    upperGain.connect(targetGain);
     upper.start(time);
     upper.stop(time + dur);
   }
@@ -4292,17 +4319,36 @@ document.addEventListener('DOMContentLoaded', function () {
   function startMusic() {
     if (!audioCtx || musicTimer) return;
     musicStep = 0;
+    const getProfile = function () {
+      return musicProfiles[currentMusicProfile] || musicProfiles.letter;
+    };
     musicTimer = setInterval(function () {
       if (!audioCtx) return;
+      const profile = getProfile();
       const now = audioCtx.currentTime + 0.05;
-      const noteName = musicMelody[musicStep % musicMelody.length];
-      if (noteName) playMusicNote(musicNotes[noteName], now, 1.8, 0.085);
-      if (musicStep % 8 === 0) {
-        playMusicNote(musicNotes.C3, now, 4.2, 0.038);
-        playMusicNote(musicNotes.G3, now, 4.2, 0.03);
+      const noteName = profile.melody[musicStep % profile.melody.length];
+      if (noteName) {
+        playMusicNote(musicNotes[noteName], now, profile.melodyDur, profile.melodyVol, {
+          type: 'triangle',
+          upperType: 'sine',
+          upperVol: currentMusicProfile === 'game' ? 0.2 : 0.12,
+          upperDur: 0.48
+        });
+      }
+      if (musicStep % profile.bassEvery === 0) {
+        playMusicNote(musicNotes.C3, now, profile.bassDur, profile.bassVol, {
+          type: 'sine',
+          upperVol: 0.08,
+          upperDur: 0.35
+        });
+        playMusicNote(musicNotes.G3, now + 0.08, profile.bassDur, profile.bassVol * 0.82, {
+          type: 'sine',
+          upperVol: 0.06,
+          upperDur: 0.32
+        });
       }
       musicStep++;
-    }, 460);
+    }, getProfile().interval);
   }
 
   function initAudio() {
@@ -4323,7 +4369,9 @@ document.addEventListener('DOMContentLoaded', function () {
     audioUnlocked = true;
 
     masterGain = audioCtx.createGain();
-    masterGain.gain.value = musicOn ? 0.16 : 0;
+    masterGain.gain.value = musicOn ? 0.12 : 0;
+    fxGain = audioCtx.createGain();
+    fxGain.gain.value = 0.78;
 
     const delay = audioCtx.createDelay(1.0);
     delay.delayTime.value = 0.32;
@@ -4334,6 +4382,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     masterGain.connect(audioCtx.destination);
     masterGain.connect(delay);
+    fxGain.connect(audioCtx.destination);
+    fxGain.connect(delay);
     delay.connect(feedback);
     feedback.connect(delay);
     delay.connect(wet);
@@ -4365,23 +4415,59 @@ document.addEventListener('DOMContentLoaded', function () {
   function setMusic(on) {
     musicOn = on;
     if (masterGain && audioCtx) {
-      masterGain.gain.setTargetAtTime(on ? 0.16 : 0, audioCtx.currentTime, 0.2);
+      masterGain.gain.setTargetAtTime(on ? (currentMusicProfile === 'game' ? 0.138 : 0.12) : 0, audioCtx.currentTime, 0.24);
     }
     updateMusicBtn();
+  }
+
+  function setMusicProfile(name) {
+    currentMusicProfile = musicProfiles[name] ? name : 'letter';
+    if (musicOn && masterGain && audioCtx) {
+      masterGain.gain.setTargetAtTime(currentMusicProfile === 'game' ? 0.138 : 0.12, audioCtx.currentTime, 0.22);
+    }
+    if (musicTimer) {
+      clearInterval(musicTimer);
+      musicTimer = null;
+      startMusic();
+    }
+  }
+
+  function duckMusic(amount, holdMs) {
+    if (!audioCtx || !masterGain || !musicOn) return;
+    const normal = currentMusicProfile === 'game' ? 0.138 : 0.12;
+    const lowered = Math.max(0.03, normal - amount);
+    masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+    masterGain.gain.setTargetAtTime(lowered, audioCtx.currentTime, 0.06);
+    setTimeout(function () {
+      if (!audioCtx || !masterGain || !musicOn) return;
+      masterGain.gain.setTargetAtTime(normal, audioCtx.currentTime, 0.24);
+    }, holdMs || 700);
   }
 
   function playChime() {
     if (!audioCtx || !musicOn) return;
     const now = audioCtx.currentTime + 0.04;
-    playMusicNote(musicNotes.C6, now, 2.4, 0.07);
-    playMusicNote(musicNotes.E6, now + 0.16, 2.4, 0.05);
+    duckMusic(0.045, 1000);
+    playMusicNote(musicNotes.C6, now, 2.6, 0.055, { fx: true, type: 'sine', upperType: 'triangle', upperVol: 0.24 });
+    playMusicNote(musicNotes.E6, now + 0.12, 2.4, 0.045, { fx: true, type: 'sine', upperType: 'triangle', upperVol: 0.2 });
+    playMusicNote(musicNotes.G6, now + 0.24, 2.1, 0.032, { fx: true, type: 'triangle', upperVol: 0.18 });
   }
 
   function playSealSound() {
     if (!audioCtx || !musicOn) return;
     const now = audioCtx.currentTime + 0.02;
-    playMusicNote(musicNotes.C3, now, 0.6, 0.05);
-    playMusicNote(musicNotes.E6, now + 0.06, 1.8, 0.045);
+    duckMusic(0.05, 850);
+    playMusicNote(musicNotes.C3, now, 0.78, 0.044, { fx: true, type: 'sine', upperVol: 0.08, upperDur: 0.28 });
+    playMusicNote(musicNotes.G4, now + 0.04, 0.82, 0.022, { fx: true, type: 'triangle', upperVol: 0.14, upperDur: 0.38 });
+    playMusicNote(musicNotes.E6, now + 0.1, 1.7, 0.036, { fx: true, type: 'sine', upperVol: 0.18, upperDur: 0.44 });
+  }
+
+  function playSceneLift() {
+    if (!audioCtx || !musicOn) return;
+    const now = audioCtx.currentTime + 0.03;
+    duckMusic(0.03, 640);
+    playMusicNote(musicNotes.C5, now, 0.95, 0.03, { fx: true, type: 'triangle', upperVol: 0.14 });
+    playMusicNote(musicNotes.E5, now + 0.08, 1.05, 0.028, { fx: true, type: 'triangle', upperVol: 0.14 });
   }
 
   if (musicBtn) {
