@@ -1212,7 +1212,7 @@ button {
   line-height: 2.05;
   letter-spacing: 0.02em;
   text-shadow: 0 0 12px rgba(255, 120, 180, 0.22);
-  opacity: 0;
+  opacity: 1;
   animation: letterFadeIn 1.3s ease 0.12s forwards;
 }
 
@@ -4026,6 +4026,7 @@ document.addEventListener('DOMContentLoaded', function () {
     pages.letter.scrollTop = 0;
     if (!letterSealOpened) openWaxSeal();
     else if (waxSealOverlay) waxSealOverlay.classList.remove('show', 'breaking');
+    if (confession) confession.classList.add('in-view');
 
     if (!reduceMotion) {
       letterStarTimer = setInterval(function () { createFallStar(letterFallStar); }, 340);
