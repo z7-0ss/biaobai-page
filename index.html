@@ -1286,6 +1286,34 @@ button {
   transition: opacity 0.45s ease, visibility 0.45s;
 }
 
+.wax-seal-overlay::before {
+  content: "";
+  position: absolute;
+  width: min(64vw, 420px);
+  height: min(64vw, 420px);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(255, 187, 128, 0.2) 0, rgba(255, 140, 80, 0.12) 34%, rgba(255, 110, 70, 0.04) 56%, transparent 72%);
+  filter: blur(8px);
+  opacity: 0.9;
+  pointer-events: none;
+  animation: waxAuraPulse 3.4s ease-in-out infinite;
+}
+
+.wax-seal-overlay::after {
+  content: "";
+  position: absolute;
+  width: min(70vw, 480px);
+  height: min(70vw, 480px);
+  border-radius: 50%;
+  border: 1px solid rgba(255, 200, 145, 0.1);
+  box-shadow:
+    0 0 36px rgba(255, 162, 96, 0.08),
+    inset 0 0 40px rgba(255, 175, 120, 0.04);
+  pointer-events: none;
+  animation: waxAuraRing 5.8s linear infinite;
+}
+
 .wax-seal-overlay.show {
   opacity: 1;
   visibility: visible;
@@ -1294,6 +1322,7 @@ button {
 
 .wax-seal {
   position: relative;
+  z-index: 1;
   width: 112px;
   height: 112px;
   display: grid;
@@ -1324,6 +1353,19 @@ button {
   box-shadow: inset 0 2px 6px rgba(60, 0, 20, 0.5), 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
+.wax-seal::after {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 194, 145, 0.14);
+  box-shadow:
+    0 0 20px rgba(255, 166, 92, 0.18),
+    inset 0 0 12px rgba(255, 205, 170, 0.08);
+  opacity: 0.85;
+  animation: waxSealHalo 2.8s ease-in-out infinite;
+}
+
 .wax-seal:hover {
   filter: brightness(1.1);
 }
@@ -1344,6 +1386,8 @@ button {
 }
 
 .wax-seal-hint {
+  position: relative;
+  z-index: 1;
   color: rgba(255, 214, 234, 0.72);
   font-size: 12px;
   letter-spacing: 3px;
@@ -1356,9 +1400,25 @@ button {
   50% { transform: rotate(-1deg) scale(1.035); }
 }
 
+@keyframes waxSealHalo {
+  0%, 100% { transform: scale(0.96); opacity: 0.55; }
+  50% { transform: scale(1.03); opacity: 0.95; }
+}
+
 @keyframes waxHintFloat {
   0%, 100% { opacity: 0.55; transform: translateY(0); }
   50% { opacity: 0.9; transform: translateY(-2px); }
+}
+
+@keyframes waxAuraPulse {
+  0%, 100% { transform: scale(0.96); opacity: 0.68; }
+  50% { transform: scale(1.04); opacity: 1; }
+}
+
+@keyframes waxAuraRing {
+  0% { transform: rotate(0deg) scale(0.94); opacity: 0.22; }
+  50% { opacity: 0.34; }
+  100% { transform: rotate(360deg) scale(1.02); opacity: 0.22; }
 }
 
 .wax-seal-crack {
@@ -2203,6 +2263,7 @@ button {
   margin: 14px auto 0;
   padding: 16px 18px 18px;
   width: min(100%, 420px);
+  position: relative;
   border: 1px solid rgba(255, 195, 228, 0.14);
   border-radius: 22px;
   background:
@@ -2210,10 +2271,31 @@ button {
   box-shadow:
     0 10px 30px rgba(22, 8, 38, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  overflow: hidden;
 }
 
 .game-panel[hidden] {
   display: none;
+}
+
+.game-panel::before {
+  content: "";
+  position: absolute;
+  inset: -40% 20% auto -20%;
+  height: 180px;
+  background: radial-gradient(circle, rgba(255, 172, 218, 0.12), transparent 68%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.game-panel::after {
+  content: "";
+  position: absolute;
+  inset: auto -26% -26% 30%;
+  height: 160px;
+  background: radial-gradient(circle, rgba(121, 190, 255, 0.12), transparent 70%);
+  filter: blur(12px);
+  pointer-events: none;
 }
 
 .game-entry {
@@ -2244,6 +2326,20 @@ button {
 
 .game-entry-btn:active {
   transform: translateY(0) scale(0.99);
+}
+
+.game-entry-btn::after {
+  content: "进入小游戏";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255, 178, 219, 0.1);
+  color: rgba(255, 230, 243, 0.88);
+  font-size: 12px;
+  letter-spacing: 1px;
 }
 
 .game-entry-title {
@@ -2433,6 +2529,12 @@ button {
   z-index: 2;
 }
 
+.game-status.is-success {
+  background: rgba(48, 16, 62, 0.68);
+  color: #fff2fa;
+  box-shadow: 0 0 22px rgba(255, 177, 220, 0.14);
+}
+
 .game-result {
   position: absolute;
   inset: 18px;
@@ -2473,6 +2575,15 @@ button {
   border-radius: 999px;
   background: linear-gradient(135deg, rgba(255, 161, 208, 0.18), rgba(255, 255, 255, 0.08));
   color: #fff0f8;
+}
+
+.game-result-glow {
+  position: absolute;
+  inset: 14% 18%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 191, 223, 0.22), transparent 68%);
+  filter: blur(12px);
+  pointer-events: none;
 }
 
 .catch-star {
@@ -2526,12 +2637,34 @@ button {
   z-index: 2;
 }
 
+.game-trail {
+  position: absolute;
+  width: 76px;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255, 241, 210, 0.95), rgba(255,255,255,0));
+  opacity: 0;
+  transform: rotate(-18deg);
+  animation: gameTrailMove 1.8s ease-out forwards;
+  pointer-events: none;
+}
+
 .game-page-wrap {
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 84px 14px 28px;
+}
+
+.game-page-wrap::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 20% 18%, rgba(255, 180, 218, 0.1), transparent 28%),
+    radial-gradient(circle at 80% 24%, rgba(150, 210, 255, 0.08), transparent 24%),
+    radial-gradient(circle at 50% 72%, rgba(255, 225, 175, 0.06), transparent 30%);
 }
 
 @keyframes catchStarFall {
@@ -2543,6 +2676,12 @@ button {
 @keyframes catchSparkBurst {
   from { transform: translate(0, 0) scale(0.4); opacity: 1; }
   to { transform: translate(var(--sx, 0px), var(--sy, -24px)) scale(1.1); opacity: 0; }
+}
+
+@keyframes gameTrailMove {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(-18deg) scaleX(0.3); }
+  15% { opacity: 0.9; }
+  100% { opacity: 0; transform: translate3d(var(--tx, 90px), var(--ty, 46px), 0) rotate(-18deg) scaleX(1); }
 }
 
 @keyframes gameCorePulse {
@@ -3672,6 +3811,7 @@ button {
         <div class="game-core" aria-hidden="true"></div>
         <div class="game-status" id="gameStatus">准备好了就开始吧，星星会慢慢落下来。</div>
         <div class="game-result" id="gameResult" hidden>
+          <div class="game-result-glow" aria-hidden="true"></div>
           <div class="game-result-title" id="gameResultTitle">整片星空都亮了</div>
           <div class="game-result-text" id="gameResultText">你已经点亮了我的整个宇宙。</div>
           <button class="game-result-btn" id="gameResultBtn" type="button">再点亮一次</button>
@@ -3803,6 +3943,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let activePage = 'page1';
   let girlPopTimer = null;
   let letterSealOpened = false;
+  let letterScrollBeforeGame = 0;
 
   function popGirl() {
     const mover = document.querySelector('.girl-mover');
@@ -4018,13 +4159,23 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function showLetter() {
+    return showLetterView({});
+  }
+
+  function showLetterView(options) {
+    const opts = options || {};
     clearPage3();
     resetBubbles();
     clearLetterStars();
     resetStarGameState();
     activatePage('letter');
 
-    pages.letter.scrollTop = 0;
+    if (opts.fromGame) {
+      const targetTop = letterScrollBeforeGame || (gameEntry ? Math.max(0, gameEntry.offsetTop - 110) : 0);
+      pages.letter.scrollTop = targetTop;
+    } else {
+      pages.letter.scrollTop = 0;
+    }
     if (!letterSealOpened) openWaxSeal();
     else if (waxSealOverlay) waxSealOverlay.classList.remove('show', 'breaking');
     if (confession) confession.classList.add('in-view');
@@ -4036,6 +4187,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function showGamePage() {
     clearLetterStars();
+    letterScrollBeforeGame = pages.letter ? pages.letter.scrollTop : 0;
     activatePage('game');
   }
 
@@ -4108,6 +4260,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let musicTimer = null;
   let musicStep = 0;
   let musicOn = true;
+  let audioUnlocked = false;
 
   function playMusicNote(freq, time, dur, vol) {
     if (!audioCtx || !masterGain) return;
@@ -4155,6 +4308,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function initAudio() {
     if (audioCtx) {
       if (audioCtx.state === 'suspended') audioCtx.resume();
+      audioUnlocked = true;
       return;
     }
     const AudioCtor = window.AudioContext || window.webkitAudioContext;
@@ -4166,6 +4320,7 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
     if (audioCtx.state === 'suspended') audioCtx.resume();
+    audioUnlocked = true;
 
     masterGain = audioCtx.createGain();
     masterGain.gain.value = musicOn ? 0.16 : 0;
@@ -4188,6 +4343,15 @@ document.addEventListener('DOMContentLoaded', function () {
     if (musicBtn) {
       musicBtn.classList.add('active');
       musicBtn.setAttribute('aria-pressed', 'true');
+    }
+  }
+
+  function unlockAudioOnce() {
+    if (audioUnlocked) return;
+    initAudio();
+    if (audioCtx) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      setMusic(true);
     }
   }
 
@@ -4223,11 +4387,21 @@ document.addEventListener('DOMContentLoaded', function () {
   if (musicBtn) {
     musicBtn.addEventListener('click', function (e) {
       e.stopPropagation();
-      if (!audioCtx) initAudio();
+      if (!audioCtx) {
+        initAudio();
+        if (audioCtx) {
+          setMusic(true);
+          return;
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
       setMusic(!musicOn);
     });
   }
   updateMusicBtn();
+
+  document.addEventListener('pointerdown', unlockAudioOnce, { passive: true });
+  document.addEventListener('keydown', unlockAudioOnce);
 
   if (finaleContinue) {
     finaleContinue.addEventListener('click', showLetter);
@@ -4312,6 +4486,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const memoryModalDesc = $('memoryModalDesc');
   const memoryModalImage = $('memoryModalImage');
   const memoryModalClose = $('memoryModalClose');
+  const gameEntry = document.querySelector('.game-entry');
   const openGamePage = $('openGamePage');
   const gamePanel = $('gamePanel');
   const gameArea = $('gameArea');
@@ -4343,6 +4518,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let gameSpawnTimer = null;
   let gameStopTimer = null;
   let gameCountdownTimer = null;
+  let gameTrailTimer = null;
   let gameDurationMs = 14000;
   let gameEndAt = 0;
 
@@ -4531,7 +4707,9 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function setGameStatus(text) {
-    if (gameStatus) gameStatus.textContent = text;
+    if (!gameStatus) return;
+    gameStatus.textContent = text;
+    gameStatus.classList.toggle('is-success', /整个宇宙|整片星空都亮了|已经点亮/.test(text));
   }
 
   function setGameScore(value) {
@@ -4569,9 +4747,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function clearGameStars() {
     if (!gameArea) return;
-    gameArea.querySelectorAll('.catch-star, .catch-spark').forEach(function (star) {
+    gameArea.querySelectorAll('.catch-star, .catch-spark, .game-trail').forEach(function (star) {
       star.remove();
     });
+  }
+
+  function spawnGameTrail() {
+    if (!gameArea || reduceMotion) return;
+    const trail = document.createElement('span');
+    trail.className = 'game-trail';
+    trail.style.left = (4 + Math.random() * 34) + '%';
+    trail.style.top = (8 + Math.random() * 44) + '%';
+    trail.style.setProperty('--tx', (44 + Math.random() * 80) + 'px');
+    trail.style.setProperty('--ty', (18 + Math.random() * 34) + 'px');
+    gameArea.appendChild(trail);
+    setTimeout(function () { trail.remove(); }, 1800);
   }
 
   function burstCatchSpark(x, y) {
@@ -4591,9 +4781,11 @@ document.addEventListener('DOMContentLoaded', function () {
   function stopStarGame(finished) {
     clearInterval(gameSpawnTimer);
     clearInterval(gameCountdownTimer);
+    clearInterval(gameTrailTimer);
     clearTimeout(gameStopTimer);
     gameSpawnTimer = null;
     gameCountdownTimer = null;
+    gameTrailTimer = null;
     gameStopTimer = null;
     gameRunning = false;
     if (gameStartBtn) gameStartBtn.textContent = finished ? '再点亮一次' : '重新开始';
@@ -4659,6 +4851,7 @@ document.addEventListener('DOMContentLoaded', function () {
     hideGameResult();
     clearInterval(gameSpawnTimer);
     clearInterval(gameCountdownTimer);
+    clearInterval(gameTrailTimer);
     clearTimeout(gameStopTimer);
     gameRunning = true;
     setGameScore(0);
@@ -4670,7 +4863,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     spawnCatchStar();
     gameSpawnTimer = setInterval(spawnCatchStar, reduceMotion ? 950 : 620);
+    if (!reduceMotion) spawnGameTrail();
+    if (!reduceMotion) setTimeout(spawnGameTrail, 420);
     gameCountdownTimer = setInterval(syncGameCountdown, 250);
+    if (!reduceMotion) {
+      gameTrailTimer = setInterval(function () {
+        if (!gameRunning) {
+          clearInterval(gameTrailTimer);
+          gameTrailTimer = null;
+          return;
+        }
+        spawnGameTrail();
+      }, 1200);
+    }
     gameStopTimer = setTimeout(function () {
       if (gameRunning) finishStarGame(gameScoreValue >= gameTarget);
     }, gameDurationMs);
@@ -5083,12 +5288,14 @@ document.addEventListener('DOMContentLoaded', function () {
   backToPage2Left.addEventListener('click', showPage2);
   backToPage2Right.addEventListener('click', showPage2);
   backToPage3R.addEventListener('click', showPage3Right);
-  if (backToLetterGame) backToLetterGame.addEventListener('click', showLetter);
+  if (backToLetterGame) backToLetterGame.addEventListener('click', function () {
+    showLetterView({ fromGame: true });
+  });
 
   // 按 Esc 也能逐级返回
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    if (activePage === 'game') showLetter();
+    if (activePage === 'game') showLetterView({ fromGame: true });
     else if (activePage === 'letter') showPage3Right();
     else if (activePage === 'page3L' || activePage === 'page3R') showPage2();
     else if (activePage === 'page2') showPage1();
