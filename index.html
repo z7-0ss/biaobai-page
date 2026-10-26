@@ -2327,6 +2327,67 @@ button {
   pointer-events: none;
 }
 
+.happy-shell {
+  width: min(100%, 420px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.happy-hero {
+  position: relative;
+  padding: 18px 18px 16px;
+  border: 1px solid rgba(255, 197, 228, 0.16);
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 176, 220, 0.14), transparent 28%),
+    radial-gradient(circle at 82% 24%, rgba(134, 191, 255, 0.12), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(98, 151, 255, 0.03));
+  box-shadow:
+    0 12px 34px rgba(22, 8, 38, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  overflow: hidden;
+}
+
+.happy-hero::before {
+  content: "";
+  position: absolute;
+  inset: auto -24% -52% 36%;
+  height: 180px;
+  background: radial-gradient(circle, rgba(255, 214, 128, 0.12), transparent 70%);
+  filter: blur(12px);
+  pointer-events: none;
+}
+
+.happy-kicker {
+  position: relative;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: rgba(255, 219, 236, 0.6);
+}
+
+.happy-title {
+  position: relative;
+  margin-top: 8px;
+  font-size: 24px;
+  line-height: 1.35;
+  color: #fff3f9;
+}
+
+.happy-copy {
+  position: relative;
+  margin-top: 10px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(255, 227, 241, 0.78);
+}
+
+.happy-shell .memory-panel,
+.happy-shell .game-panel {
+  width: 100%;
+  margin: 0;
+}
+
 .game-entry {
   margin: 14px auto 0;
   width: min(100%, 420px);
@@ -3913,15 +3974,10 @@ button {
         <div class="timeline-current" id="timelineCurrent">正在展开这片星空...</div>
         <div class="timeline-track" id="timelineTrack"></div>
       </div>
-      <div class="memory-panel" id="memoryPanel" hidden>
-        <div class="timeline-label">回忆星球</div>
-        <div class="memory-intro">把那些值得反复想起的时刻，收进这片小小的宇宙里。</div>
-        <div class="memory-stars" id="memoryStars"></div>
-      </div>
       <div class="game-entry">
         <button class="game-entry-btn" id="openGamePage" type="button">
-          <span class="game-entry-title">点亮星空</span>
-          <span class="game-entry-desc">把小游戏单独放到下一页里，点进去会更流畅，也更容易看见。</span>
+          <span class="game-entry-title">进入快乐星球</span>
+          <span class="game-entry-desc">回忆星球、点亮星空和以后想慢慢加进去的小宇宙，都放到单独这一页。</span>
         </button>
       </div>
       <button class="save-day" id="saveDay" type="button" hidden>保存今天</button>
@@ -3950,30 +4006,44 @@ button {
   </div>
 
   <div class="game-page-wrap">
-    <div class="game-panel" id="gamePanel">
-      <div class="timeline-label">点亮星空</div>
-      <div class="game-title">把星光送到她身边</div>
-      <div class="game-subtitle">每点亮一颗星，都会更靠近这片宇宙的中心。</div>
-      <div class="game-intro">轻轻点住掉落的星星，点亮 12 颗之后，这片宇宙会把偏爱说给她听。</div>
-      <div class="game-meta">
-        <div class="game-score" id="gameScore">已点亮 0 / 12</div>
-        <div class="game-timer" id="gameTimer">剩余 14 秒</div>
-        <button class="game-btn" id="gameStartBtn" type="button">开始点亮</button>
+    <div class="happy-shell">
+      <section class="happy-hero">
+        <div class="happy-kicker">HAPPY PLANET</div>
+        <div class="happy-title">欢迎来到快乐星球</div>
+        <div class="happy-copy">这里放回忆、星光和以后慢慢长出来的小宇宙。表白页只负责认真告白，这一页负责把喜欢变得更完整。</div>
+      </section>
+
+      <div class="memory-panel" id="memoryPanel" hidden>
+        <div class="timeline-label">回忆星球</div>
+        <div class="memory-intro">把那些值得反复想起的时刻，收进这片小小的宇宙里。</div>
+        <div class="memory-stars" id="memoryStars"></div>
       </div>
-      <div class="game-progress">
-        <div class="game-progress-track"><div class="game-progress-fill" id="gameProgressFill"></div></div>
-        <div class="game-progress-note" id="gameProgressNote">点亮整片星空后，会出现一段只属于她的回应。</div>
-      </div>
-      <div class="game-area" id="gameArea">
-        <div class="game-core-ring" aria-hidden="true"></div>
-        <div class="game-core" aria-hidden="true"></div>
-        <div class="game-status" id="gameStatus">准备好了就开始吧，星星会慢慢落下来。</div>
-        <div class="game-victory-layer" id="gameVictoryLayer" hidden></div>
-        <div class="game-result" id="gameResult" hidden>
-          <div class="game-result-glow" aria-hidden="true"></div>
-          <div class="game-result-title" id="gameResultTitle">整片星空都亮了</div>
-          <div class="game-result-text" id="gameResultText">你已经点亮了我的整个宇宙。</div>
-          <button class="game-result-btn" id="gameResultBtn" type="button">再点亮一次</button>
+
+      <div class="game-panel" id="gamePanel">
+        <div class="timeline-label">点亮星空</div>
+        <div class="game-title">把星光送到她身边</div>
+        <div class="game-subtitle">每点亮一颗星，都会更靠近这片宇宙的中心。</div>
+        <div class="game-intro">轻轻点住掉落的星星，点亮 12 颗之后，这片宇宙会把偏爱说给她听。</div>
+        <div class="game-meta">
+          <div class="game-score" id="gameScore">已点亮 0 / 12</div>
+          <div class="game-timer" id="gameTimer">剩余 14 秒</div>
+          <button class="game-btn" id="gameStartBtn" type="button">开始点亮</button>
+        </div>
+        <div class="game-progress">
+          <div class="game-progress-track"><div class="game-progress-fill" id="gameProgressFill"></div></div>
+          <div class="game-progress-note" id="gameProgressNote">点亮整片星空后，会出现一段只属于她的回应。</div>
+        </div>
+        <div class="game-area" id="gameArea">
+          <div class="game-core-ring" aria-hidden="true"></div>
+          <div class="game-core" aria-hidden="true"></div>
+          <div class="game-status" id="gameStatus">准备好了就开始吧，星星会慢慢落下来。</div>
+          <div class="game-victory-layer" id="gameVictoryLayer" hidden></div>
+          <div class="game-result" id="gameResult" hidden>
+            <div class="game-result-glow" aria-hidden="true"></div>
+            <div class="game-result-title" id="gameResultTitle">整片星空都亮了</div>
+            <div class="game-result-text" id="gameResultText">你已经点亮了我的整个宇宙。</div>
+            <button class="game-result-btn" id="gameResultBtn" type="button">再点亮一次</button>
+          </div>
         </div>
       </div>
     </div>
