@@ -3801,6 +3801,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let sealRemoveTimer = null;
   let activePage = 'page1';
   let girlPopTimer = null;
+  let letterSealOpened = false;
 
   function popGirl() {
     const mover = document.querySelector('.girl-mover');
@@ -3942,6 +3943,7 @@ document.addEventListener('DOMContentLoaded', function () {
     clearTimeout(sealTimer);
     clearTimeout(sealRemoveTimer);
     sealTimer = null;
+    letterSealOpened = true;
     waxSealOverlay.classList.add('breaking');
     playSealSound();
     createWaxShards();
@@ -4022,7 +4024,8 @@ document.addEventListener('DOMContentLoaded', function () {
     activatePage('letter');
 
     pages.letter.scrollTop = 0;
-    openWaxSeal();
+    if (!letterSealOpened) openWaxSeal();
+    else if (waxSealOverlay) waxSealOverlay.classList.remove('show', 'breaking');
 
     if (!reduceMotion) {
       letterStarTimer = setInterval(function () { createFallStar(letterFallStar); }, 340);
