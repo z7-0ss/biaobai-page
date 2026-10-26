@@ -1300,6 +1300,11 @@ button {
 .wax-seal-overlay {
   position: fixed;
   inset: 0;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100vh;
   z-index: 25;
   display: flex;
   flex-direction: column;
@@ -1312,6 +1317,7 @@ button {
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  overflow: hidden;
   transition: opacity 0.45s ease, visibility 0.45s;
 }
 
@@ -4011,7 +4017,7 @@ button {
         <div class="timeline-track" id="timelineTrack"></div>
       </div>
       <div class="game-entry">
-        <button class="game-entry-btn" id="openGamePage" type="button">
+        <button class="game-entry-btn" id="openHappyPage" type="button">
           <span class="game-entry-title">进入快乐星球</span>
           <span class="game-entry-desc">回忆星球、点亮星空和以后想慢慢加进去的小宇宙，都放到单独这一页。</span>
         </button>
@@ -4020,21 +4026,13 @@ button {
     </section>
   </article>
 
-  <div class="wax-seal-overlay" id="waxSealOverlay">
-    <button class="wax-seal" id="waxSeal" type="button" aria-label="拆开这封信">
-      <span class="wax-seal-stamp" aria-hidden="true">♥</span>
-      <span class="wax-seal-crack" aria-hidden="true"></span>
-    </button>
-    <div class="wax-seal-hint">轻触火漆，拆开这封信</div>
-  </div>
-
 </div>
 
-<!-- 第五页 星星小游戏 -->
-<div class="page" id="page5-game">
+<!-- 第五页 快乐星球 -->
+<div class="page" id="page5-happy">
   <div class="letter-bar">
     <div class="letter-bar-inner">
-      <button class="back-btn" id="backToLetterGame" type="button" aria-label="返回书信页">
+      <button class="back-btn" id="backToLetterHappy" type="button" aria-label="返回书信页">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
         <span>返回</span>
       </button>
@@ -4063,38 +4061,67 @@ button {
         <div class="memory-stars" id="memoryStars"></div>
       </div>
 
-      <div class="game-panel" id="gamePanel">
-        <div class="happy-block-title">
-          <div class="timeline-label">点亮星空</div>
-          <div class="happy-block-note">LIGHT THE SKY</div>
-        </div>
-        <div class="game-title">把星光送到她身边</div>
-        <div class="game-subtitle">每点亮一颗星，都会更靠近这片宇宙的中心。</div>
-        <div class="game-intro">轻轻点住掉落的星星，点亮 12 颗之后，这片宇宙会把偏爱说给她听。</div>
-        <div class="game-meta">
-          <div class="game-score" id="gameScore">已点亮 0 / 12</div>
-          <div class="game-timer" id="gameTimer">剩余 14 秒</div>
-          <button class="game-btn" id="gameStartBtn" type="button">开始点亮</button>
-        </div>
-        <div class="game-progress">
-          <div class="game-progress-track"><div class="game-progress-fill" id="gameProgressFill"></div></div>
-          <div class="game-progress-note" id="gameProgressNote">点亮整片星空后，会出现一段只属于她的回应。</div>
-        </div>
-        <div class="game-area" id="gameArea">
-          <div class="game-core-ring" aria-hidden="true"></div>
-          <div class="game-core" aria-hidden="true"></div>
-          <div class="game-status" id="gameStatus">准备好了就开始吧，星星会慢慢落下来。</div>
-          <div class="game-victory-layer" id="gameVictoryLayer" hidden></div>
-          <div class="game-result" id="gameResult" hidden>
-            <div class="game-result-glow" aria-hidden="true"></div>
-            <div class="game-result-title" id="gameResultTitle">整片星空都亮了</div>
-            <div class="game-result-text" id="gameResultText">你已经点亮了我的整个宇宙。</div>
-            <button class="game-result-btn" id="gameResultBtn" type="button">再点亮一次</button>
-          </div>
+      <div class="game-entry">
+        <button class="game-entry-btn" id="openGamePage" type="button">
+          <span class="game-entry-title">去点亮星空</span>
+          <span class="game-entry-desc">小游戏单独放在下一页，空间更完整，也不会拖长快乐星球这一页。</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 第六页 点亮星空 -->
+<div class="page" id="page6-game">
+  <div class="letter-bar">
+    <div class="letter-bar-inner">
+      <button class="back-btn" id="backToHappyGame" type="button" aria-label="返回快乐星球页">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
+        <span>返回</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="game-page-wrap">
+    <div class="game-panel" id="gamePanel">
+      <div class="happy-block-title">
+        <div class="timeline-label">点亮星空</div>
+        <div class="happy-block-note">LIGHT THE SKY</div>
+      </div>
+      <div class="game-title">把星光送到她身边</div>
+      <div class="game-subtitle">每点亮一颗星，都会更靠近这片宇宙的中心。</div>
+      <div class="game-intro">轻轻点住掉落的星星，点亮 12 颗之后，这片宇宙会把偏爱说给她听。</div>
+      <div class="game-meta">
+        <div class="game-score" id="gameScore">已点亮 0 / 12</div>
+        <div class="game-timer" id="gameTimer">剩余 14 秒</div>
+        <button class="game-btn" id="gameStartBtn" type="button">开始点亮</button>
+      </div>
+      <div class="game-progress">
+        <div class="game-progress-track"><div class="game-progress-fill" id="gameProgressFill"></div></div>
+        <div class="game-progress-note" id="gameProgressNote">点亮整片星空后，会出现一段只属于她的回应。</div>
+      </div>
+      <div class="game-area" id="gameArea">
+        <div class="game-core-ring" aria-hidden="true"></div>
+        <div class="game-core" aria-hidden="true"></div>
+        <div class="game-status" id="gameStatus">准备好了就开始吧，星星会慢慢落下来。</div>
+        <div class="game-victory-layer" id="gameVictoryLayer" hidden></div>
+        <div class="game-result" id="gameResult" hidden>
+          <div class="game-result-glow" aria-hidden="true"></div>
+          <div class="game-result-title" id="gameResultTitle">整片星空都亮了</div>
+          <div class="game-result-text" id="gameResultText">你已经点亮了我的整个宇宙。</div>
+          <button class="game-result-btn" id="gameResultBtn" type="button">再点亮一次</button>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<div class="wax-seal-overlay" id="waxSealOverlay">
+  <button class="wax-seal" id="waxSeal" type="button" aria-label="拆开这封信">
+    <span class="wax-seal-stamp" aria-hidden="true">♥</span>
+    <span class="wax-seal-crack" aria-hidden="true"></span>
+  </button>
+  <div class="wax-seal-hint">轻触火漆，拆开这封信</div>
 </div>
 
   <dialog class="save-modal" id="saveModal" aria-label="保存今天">
@@ -4181,7 +4208,8 @@ document.addEventListener('DOMContentLoaded', function () {
     page3L: $('page3-left'),
     page3R: $('page3-right'),
     letter: $('page4-letter'),
-    game: $('page5-game')
+    happy: $('page5-happy'),
+    game: $('page6-game')
   };
 
   const heartWrap = $('heartWrap');
@@ -4194,7 +4222,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const backToPage2Left = $('backToPage2Left');
   const backToPage2Right = $('backToPage2Right');
   const backToPage3R = $('backToPage3R');
-  const backToLetterGame = $('backToLetterGame');
+  const backToLetterHappy = $('backToLetterHappy');
+  const backToHappyGame = $('backToHappyGame');
 
   const fallStarBox = $('fallStarBox');
   const fallingHeartBox = $('fallingHeartBox');
@@ -4217,10 +4246,11 @@ document.addEventListener('DOMContentLoaded', function () {
   let finaleBtnTimer = null;
   let sealTimer = null;
   let sealRemoveTimer = null;
+  let letterOpenResetTimer = null;
   let activePage = 'page1';
   let girlPopTimer = null;
   let letterSealOpened = false;
-  let letterScrollBeforeGame = 0;
+  let letterScrollBeforeHappy = 0;
 
   function popGirl() {
     const mover = document.querySelector('.girl-mover');
@@ -4362,6 +4392,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!waxSealOverlay || waxSealOverlay.classList.contains('breaking')) return;
     clearTimeout(sealTimer);
     clearTimeout(sealRemoveTimer);
+    clearTimeout(letterOpenResetTimer);
     sealTimer = null;
     letterSealOpened = true;
     waxSealOverlay.classList.add('breaking');
@@ -4372,6 +4403,9 @@ document.addEventListener('DOMContentLoaded', function () {
       letterCard.classList.remove('is-opening');
       void letterCard.offsetWidth;
       letterCard.classList.add('is-opening');
+      letterOpenResetTimer = setTimeout(function () {
+        letterCard.classList.remove('is-opening');
+      }, 1300);
     }
     sealRemoveTimer = setTimeout(function () {
       waxSealOverlay.classList.remove('show', 'breaking');
@@ -4453,14 +4487,20 @@ document.addEventListener('DOMContentLoaded', function () {
     resetStarGameState();
     activatePage('letter');
 
-    if (opts.fromGame) {
-      const targetTop = letterScrollBeforeGame || (gameEntry ? Math.max(0, gameEntry.offsetTop - 110) : 0);
+    if (opts.fromHappy) {
+      const targetTop = letterScrollBeforeHappy || (gameEntry ? Math.max(0, gameEntry.offsetTop - 110) : 0);
       pages.letter.scrollTop = targetTop;
     } else {
       pages.letter.scrollTop = 0;
     }
     if (!letterSealOpened) openWaxSeal();
     else if (waxSealOverlay) waxSealOverlay.classList.remove('show', 'breaking');
+    if (letterCard) letterCard.classList.remove('is-opening');
+    if (letterCard) {
+      letterCard.style.opacity = '1';
+      letterCard.style.transform = 'none';
+      letterCard.style.filter = 'none';
+    }
     if (confession) confession.classList.add('in-view');
     setMusicProfile('letter');
 
@@ -4469,12 +4509,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  function showGamePage() {
+  function showHappyPage() {
     clearLetterStars();
-    letterScrollBeforeGame = pages.letter ? pages.letter.scrollTop : 0;
+    letterScrollBeforeHappy = pages.letter ? pages.letter.scrollTop : 0;
+    resetStarGameState();
+    setMusicProfile('letter');
+    playSceneLift();
+    activatePage('happy');
+    updateHappySummary();
+  }
+
+  function showGamePage() {
     setMusicProfile('game');
     playSceneLift();
     activatePage('game');
+    updateHappySummary();
+  }
+
+  function showHappyFromGame() {
+    resetStarGameState();
+    setMusicProfile('letter');
+    activatePage('happy');
     updateHappySummary();
   }
 
@@ -4860,6 +4915,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const jumpStarGame = $('jumpStarGame');
   const memoryModalClose = $('memoryModalClose');
   const gameEntry = document.querySelector('.game-entry');
+  const openHappyPage = $('openHappyPage');
   const openGamePage = $('openGamePage');
   const gamePanel = $('gamePanel');
   const gameArea = $('gameArea');
@@ -5573,6 +5629,9 @@ document.addEventListener('DOMContentLoaded', function () {
   if (gameResultBtn) {
     gameResultBtn.addEventListener('click', startStarGame);
   }
+  if (openHappyPage) {
+    openHappyPage.addEventListener('click', showHappyPage);
+  }
   if (openGamePage) {
     openGamePage.addEventListener('click', showGamePage);
   }
@@ -5582,9 +5641,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
   if (jumpStarGame) {
-    jumpStarGame.addEventListener('click', function () {
-      if (gamePanel) gamePanel.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
-    });
+    jumpStarGame.addEventListener('click', showGamePage);
   }
 
   bootstrapAnniversary();
@@ -5731,14 +5788,18 @@ document.addEventListener('DOMContentLoaded', function () {
   backToPage2Left.addEventListener('click', showPage2);
   backToPage2Right.addEventListener('click', showPage2);
   backToPage3R.addEventListener('click', showPage3Right);
-  if (backToLetterGame) backToLetterGame.addEventListener('click', function () {
-    showLetterView({ fromGame: true });
+  if (backToLetterHappy) backToLetterHappy.addEventListener('click', function () {
+    showLetterView({ fromHappy: true });
+  });
+  if (backToHappyGame) backToHappyGame.addEventListener('click', function () {
+    showHappyFromGame();
   });
 
   // 按 Esc 也能逐级返回
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    if (activePage === 'game') showLetterView({ fromGame: true });
+    if (activePage === 'game') showHappyFromGame();
+    else if (activePage === 'happy') showLetterView({ fromHappy: true });
     else if (activePage === 'letter') showPage3Right();
     else if (activePage === 'page3L' || activePage === 'page3R') showPage2();
     else if (activePage === 'page2') showPage1();
