@@ -97,7 +97,80 @@ set started_at = '2026-10-25T20:13:00+08:00'
 where milestone_key = 'relationship_start';
 ```
 
-## 6. 改完别忘了重新发布
+## 6. 回忆星球编辑功能需要的 SQL
+
+如果你想在网页里直接新增、编辑、删除 `回忆星球`，还要再执行下面这段 SQL：
+
+```sql
+create table if not exists public.memory_stars (
+  id bigint generated always as identity primary key,
+  title text not null,
+  memory_date date,
+  description text,
+  image_url text not null default '',
+  star_color text not null default '#ff9ed1',
+  orbit_order integer not null,
+  created_at timestamptz not null default timezone('utc', now())
+);
+
+alter table public.memory_stars enable row level security;
+
+drop policy if exists "public can read memory stars" on public.memory_stars;
+create policy "public can read memory stars"
+on public.memory_stars
+for select
+to anon
+using (true);
+
+drop policy if exists "public can insert memory stars" on public.memory_stars;
+create policy "public can insert memory stars"
+on public.memory_stars
+for insert
+to anon
+with check (true);
+
+drop policy if exists "public can update memory stars" on public.memory_stars;
+create policy "public can update memory stars"
+on public.memory_stars
+for update
+to anon
+using (true)
+with check (true);
+
+drop policy if exists "public can delete memory stars" on public.memory_stars;
+create policy "public can delete memory stars"
+on public.memory_stars
+for delete
+to anon
+using (true);
+
+create unique index if not exists memory_stars_orbit_order_key
+on public.memory_stars (orbit_order);
+```
+
+说明：
+
+- 执行完以后，网页里的回忆星球就能直接保存到数据库。
+- `orbit_order` 是“第几颗星”的顺序，不能重复。
+- 你现在的需求是“别人也能编辑”，所以上面这套策略是公开可改的。
+- 如果以后你不想让别人编辑，再把这些 `insert / update / delete policy` 收紧就行。
+
+## 7. 回忆星球现在怎么用
+
+网页里已经加了一个隐藏管理入口：
+
+- 进入 `快乐星球`
+- 打开 `回忆星球`
+- 长按右上角的 `MEMORY STARS`
+- 就可以直接新增、编辑、删除回忆
+
+如果你现在只有一条真实存在的记录，也没关系：
+
+- 已经写进数据库的会显示成真实回忆
+- 其他空位会显示成“等待记录”
+- 以后发生新的事，再直接在网页里补进去就行
+
+## 8. 改完别忘了重新发布
 
 把 `index.html` 填好配置后，再执行：
 

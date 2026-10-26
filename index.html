@@ -2351,6 +2351,28 @@ button {
   color: rgba(255, 229, 241, 0.58);
 }
 
+.memory-star.is-waiting {
+  border-style: dashed;
+  border-color: rgba(255, 219, 238, 0.2);
+  background:
+    radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.1), transparent 44%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(132, 188, 255, 0.02));
+}
+
+.memory-star.is-waiting::before {
+  opacity: 0.7;
+}
+
+.memory-star.is-waiting::after {
+  content: "";
+  position: absolute;
+  inset: auto 20px 18px auto;
+  width: 68px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 233, 243, 0.6), transparent);
+  opacity: 0.6;
+}
+
 .memory-modal {
   width: min(88vw, 430px);
   max-width: 430px;
@@ -2413,6 +2435,263 @@ button {
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.06);
   color: #ffe3f1;
+}
+
+.memory-admin-trigger {
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+}
+
+.memory-editor-modal {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.memory-editor-modal[open] {
+  display: flex;
+  animation: saveModalIn 0.35s ease;
+}
+
+.memory-editor-modal::backdrop {
+  background: rgba(10, 3, 20, 0.84);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.memory-editor-card {
+  width: min(92vw, 520px);
+  max-height: min(90vh, 860px);
+  max-height: min(90dvh, 860px);
+  overflow-y: auto;
+  padding: 22px 18px 18px;
+  border: 1px solid rgba(255, 205, 231, 0.16);
+  border-radius: 26px;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 176, 220, 0.14), transparent 28%),
+    radial-gradient(circle at 82% 24%, rgba(134, 191, 255, 0.12), transparent 26%),
+    linear-gradient(180deg, rgba(47, 20, 72, 0.98), rgba(26, 10, 46, 0.98));
+  box-shadow:
+    0 28px 70px rgba(0, 0, 0, 0.48),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: #ffe3f1;
+}
+
+.memory-editor-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.memory-editor-kicker {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(255, 220, 237, 0.58);
+}
+
+.memory-editor-title {
+  margin-top: 6px;
+  font-size: 24px;
+  line-height: 1.35;
+  color: #fff3f9;
+}
+
+.memory-editor-copy {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.75;
+  color: rgba(255, 228, 241, 0.72);
+}
+
+.memory-editor-close {
+  flex: none;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 207, 232, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffe4f1;
+}
+
+.memory-editor-status {
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 205, 231, 0.14);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 12px;
+  line-height: 1.7;
+  color: rgba(255, 228, 241, 0.74);
+}
+
+.memory-editor-status.is-error {
+  border-color: rgba(255, 156, 198, 0.26);
+  color: #ffd4e8;
+}
+
+.memory-editor-status.is-success {
+  border-color: rgba(176, 229, 255, 0.26);
+  color: #dff6ff;
+}
+
+.memory-editor-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.memory-editor-chip {
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 205, 231, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+  text-align: left;
+  color: #ffe8f4;
+  transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+}
+
+.memory-editor-chip:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 205, 231, 0.28);
+}
+
+.memory-editor-chip.is-active {
+  border-color: rgba(176, 228, 255, 0.34);
+  background: rgba(160, 214, 255, 0.08);
+}
+
+.memory-editor-chip.is-waiting {
+  border-style: dashed;
+  color: rgba(255, 229, 241, 0.78);
+}
+
+.memory-editor-chip-order {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: rgba(255, 214, 234, 0.56);
+}
+
+.memory-editor-chip-title {
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.memory-editor-chip-note {
+  margin-top: 4px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: rgba(255, 226, 241, 0.58);
+}
+
+.memory-editor-fields {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.memory-editor-row {
+  display: grid;
+  grid-template-columns: 1fr 112px;
+  gap: 12px;
+}
+
+.memory-editor-field {
+  display: grid;
+  gap: 7px;
+}
+
+.memory-editor-label {
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: rgba(255, 220, 237, 0.6);
+}
+
+.memory-editor-input,
+.memory-editor-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 205, 231, 0.14);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffeaf5;
+  font: inherit;
+}
+
+.memory-editor-input::placeholder,
+.memory-editor-textarea::placeholder {
+  color: rgba(255, 224, 240, 0.34);
+}
+
+.memory-editor-textarea {
+  min-height: 108px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.memory-editor-input[type="color"] {
+  min-height: 48px;
+  padding: 6px;
+}
+
+.memory-editor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.memory-editor-secondary,
+.memory-editor-delete,
+.memory-editor-save {
+  padding: 10px 16px;
+  border-radius: 999px;
+  font: inherit;
+  letter-spacing: 1px;
+}
+
+.memory-editor-secondary {
+  border: 1px solid rgba(255, 209, 233, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffe4f1;
+}
+
+.memory-editor-delete {
+  border: 1px solid rgba(255, 174, 210, 0.22);
+  background: rgba(255, 132, 178, 0.08);
+  color: #ffd8ea;
+}
+
+.memory-editor-save {
+  border: 1px solid rgba(180, 232, 255, 0.24);
+  background: linear-gradient(180deg, rgba(139, 204, 255, 0.22), rgba(255, 157, 210, 0.16));
+  color: #fff3fa;
+  box-shadow: 0 10px 24px rgba(94, 164, 255, 0.16);
+}
+
+.memory-editor-secondary:disabled,
+.memory-editor-delete:disabled,
+.memory-editor-save:disabled,
+.memory-editor-input:disabled,
+.memory-editor-textarea:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
 }
 
 .game-panel {
@@ -3565,6 +3844,15 @@ button {
     text-align: left;
   }
 
+  .memory-editor-list,
+  .memory-editor-row {
+    grid-template-columns: 1fr;
+  }
+
+  .memory-editor-actions {
+    justify-content: flex-start;
+  }
+
   .select-tip {
     font-size: 13.5px;
   }
@@ -4163,7 +4451,6 @@ button {
       <div class="game-entry">
         <button class="game-entry-btn" id="openHappyPage" type="button">
           <span class="game-entry-title">进入快乐星球</span>
-          <span class="game-entry-desc">回忆星球、点亮星空和以后想慢慢加进去的小宇宙，都放到单独这一页。</span>
         </button>
       </div>
       <button class="save-day" id="saveDay" type="button" hidden>保存今天</button>
@@ -4202,7 +4489,7 @@ button {
       <div class="memory-panel" id="memoryPanel" hidden>
         <div class="happy-block-title">
           <div class="timeline-label">回忆星球</div>
-          <div class="happy-block-note">MEMORY STARS</div>
+          <div class="happy-block-note memory-admin-trigger" id="memoryAdminTrigger" tabindex="0" role="button" aria-label="长按打开回忆星球编辑">MEMORY STARS</div>
         </div>
         <div class="memory-intro">把那些值得反复想起的时刻，收进这片小小的宇宙里。</div>
       <div class="memory-meta">
@@ -4298,6 +4585,57 @@ button {
     </div>
   </dialog>
 
+  <dialog class="memory-editor-modal" id="memoryEditorModal" aria-label="编辑回忆星球">
+    <form class="memory-editor-card" id="memoryEditorForm">
+      <div class="memory-editor-top">
+        <div>
+          <div class="memory-editor-kicker">MEMORY ADMIN</div>
+          <div class="memory-editor-title">整理回忆星球</div>
+          <div class="memory-editor-copy">长按 `MEMORY STARS` 就能打开这里。真实存在的回忆可以写进去，其他格子会继续安静地等着以后。</div>
+        </div>
+        <button class="memory-editor-close" id="memoryEditorClose" type="button">收起</button>
+      </div>
+      <div class="memory-editor-status" id="memoryEditorStatus">选一颗星，就可以修改、补写或者把等待记录真正点亮。</div>
+      <div class="memory-editor-list" id="memoryEditorList"></div>
+      <div class="memory-editor-fields">
+        <input id="memoryEditorId" type="hidden" />
+        <div class="memory-editor-row">
+          <label class="memory-editor-field">
+            <span class="memory-editor-label">标题</span>
+            <input class="memory-editor-input" id="memoryEditorTitle" type="text" maxlength="40" placeholder="比如：第一次见面" />
+          </label>
+          <label class="memory-editor-field">
+            <span class="memory-editor-label">顺序</span>
+            <input class="memory-editor-input" id="memoryEditorOrder" type="number" min="1" max="99" placeholder="1" />
+          </label>
+        </div>
+        <div class="memory-editor-row">
+          <label class="memory-editor-field">
+            <span class="memory-editor-label">日期</span>
+            <input class="memory-editor-input" id="memoryEditorDate" type="date" />
+          </label>
+          <label class="memory-editor-field">
+            <span class="memory-editor-label">星光颜色</span>
+            <input class="memory-editor-input" id="memoryEditorColor" type="color" value="#ff9ed1" />
+          </label>
+        </div>
+        <label class="memory-editor-field">
+          <span class="memory-editor-label">图片链接</span>
+          <input class="memory-editor-input" id="memoryEditorImage" type="url" placeholder="没有的话可以留空" />
+        </label>
+        <label class="memory-editor-field">
+          <span class="memory-editor-label">回忆内容</span>
+          <textarea class="memory-editor-textarea" id="memoryEditorDesc" placeholder="把那天真正发生的事，或者你想留给未来的一句等待记录写在这里。"></textarea>
+        </label>
+      </div>
+      <div class="memory-editor-actions">
+        <button class="memory-editor-secondary" id="memoryEditorNew" type="button">新建一颗星</button>
+        <button class="memory-editor-delete" id="memoryEditorDelete" type="button">删除当前</button>
+        <button class="memory-editor-save" id="memoryEditorSave" type="submit">保存这颗星</button>
+      </div>
+    </form>
+  </dialog>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -4318,6 +4656,9 @@ document.addEventListener('DOMContentLoaded', function () {
     { milestone_day: 365, title: '一周年', description: '这一年，足够让我更确定你就是偏爱。' }
   ];
 
+  const MEMORY_STAR_SLOT_COUNT = 6;
+  const MEMORY_PLACEHOLDER_COLORS = ['#ff9ed1', '#ffd36e', '#9ed8ff', '#c6a6ff', '#ffbba6', '#9ef1d9'];
+  const MEMORY_STAR_SELECT = 'id, title, memory_date, description, image_url, star_color, orbit_order';
   const DEFAULT_MEMORY_STARS = [
     {
       title: '第一次聊天',
@@ -5062,11 +5403,27 @@ document.addEventListener('DOMContentLoaded', function () {
   const memoryStarsBox = $('memoryStars');
   const memoryStats = $('memoryStats');
   const memoryHint = $('memoryHint');
+  const memoryAdminTrigger = $('memoryAdminTrigger');
   const memoryModal = $('memoryModal');
   const memoryModalDate = $('memoryModalDate');
   const memoryModalTitle = $('memoryModalTitle');
   const memoryModalDesc = $('memoryModalDesc');
   const memoryModalImage = $('memoryModalImage');
+  const memoryEditorModal = $('memoryEditorModal');
+  const memoryEditorForm = $('memoryEditorForm');
+  const memoryEditorList = $('memoryEditorList');
+  const memoryEditorStatus = $('memoryEditorStatus');
+  const memoryEditorId = $('memoryEditorId');
+  const memoryEditorTitle = $('memoryEditorTitle');
+  const memoryEditorOrder = $('memoryEditorOrder');
+  const memoryEditorDate = $('memoryEditorDate');
+  const memoryEditorColor = $('memoryEditorColor');
+  const memoryEditorImage = $('memoryEditorImage');
+  const memoryEditorDesc = $('memoryEditorDesc');
+  const memoryEditorClose = $('memoryEditorClose');
+  const memoryEditorNew = $('memoryEditorNew');
+  const memoryEditorDelete = $('memoryEditorDelete');
+  const memoryEditorSave = $('memoryEditorSave');
   const happySummary = $('happySummary');
   const jumpMemoryStars = $('jumpMemoryStars');
   const jumpStarGame = $('jumpStarGame');
@@ -5108,6 +5465,8 @@ document.addEventListener('DOMContentLoaded', function () {
   let gameTrailTimer = null;
   let gameDurationMs = 14000;
   let gameEndAt = 0;
+  let memoryEditorSelectedKey = '';
+  let memoryAdminTimer = null;
 
   function pad(n) {
     return String(n).padStart(2, '0');
@@ -5175,6 +5534,48 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function createWaitingMemoryStar(order) {
+    return {
+      id: null,
+      title: '等待记录',
+      memory_date: '',
+      description: '这一格先替以后会发光的瞬间留着，等真正发生的时候，再把它认真写进去。',
+      image_url: '',
+      star_color: MEMORY_PLACEHOLDER_COLORS[(order - 1) % MEMORY_PLACEHOLDER_COLORS.length],
+      orbit_order: order,
+      is_placeholder: true
+    };
+  }
+
+  function buildMemoryDisplayItems(items) {
+    const actualItems = normalizeMemoryStars(items).map(function (item, index) {
+      return Object.assign({}, item, {
+        orbit_order: item.orbit_order || index + 1,
+        is_placeholder: false
+      });
+    });
+    const highestOrder = Math.max(
+      MEMORY_STAR_SLOT_COUNT,
+      actualItems.reduce(function (max, item) { return Math.max(max, item.orbit_order || 0); }, 0)
+    );
+    const map = new Map();
+    actualItems.forEach(function (item) {
+      map.set(item.orbit_order, item);
+    });
+
+    const displayItems = [];
+    for (let order = 1; order <= highestOrder; order += 1) {
+      displayItems.push(map.get(order) || createWaitingMemoryStar(order));
+    }
+    return displayItems;
+  }
+
+  function getMemoryItemKey(item) {
+    if (!item) return 'order:1';
+    if (item.id) return 'id:' + item.id;
+    return 'order:' + (item.orbit_order || 1);
+  }
+
   function buildCounterText(startAt) {
     const parts = getElapsedParts(startAt);
     return '已经一起走过 ' +
@@ -5204,17 +5605,160 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function updateMemoryMeta(items) {
+    const waitingCount = Math.max(0, MEMORY_STAR_SLOT_COUNT - items.length);
     if (memoryStats) {
-      memoryStats.textContent = items.length
-        ? '已经收好 ' + items.length + ' 颗回忆星球'
-        : '这片星空正在慢慢长出来';
+      if (items.length) {
+        memoryStats.textContent = '已经收好 ' + items.length + ' 颗回忆星球' + (waitingCount ? '，还有 ' + waitingCount + ' 格等待记录' : '');
+      } else {
+        memoryStats.textContent = '已经先留好 ' + MEMORY_STAR_SLOT_COUNT + ' 格等待记录';
+      }
     }
     if (memoryHint) {
       const latest = getLatestMemoryDate(items);
       memoryHint.textContent = latest
-        ? '最新一颗停在 ' + formatDate(latest) + '，轻触就能展开。'
-        : '轻触一颗星星，就会打开那段回忆。';
+        ? '最新一颗停在 ' + formatDate(latest) + '，轻触可查看，长按 MEMORY STARS 可整理。'
+        : '这片星空先替你留着，轻触可查看，长按 MEMORY STARS 可整理。';
     }
+  }
+
+  function openMemoryDetail(item) {
+    if (!memoryModal || !memoryModalTitle || !memoryModalDesc || !memoryModalDate || !memoryModalImage) return;
+
+    if (item && item.is_placeholder) {
+      memoryModalDate.textContent = '等待未来某一天';
+      memoryModalTitle.textContent = '等待记录';
+      memoryModalDesc.textContent = item.description || '这一格先替以后会发光的瞬间留着。';
+      memoryModalImage.hidden = true;
+      memoryModalImage.removeAttribute('src');
+    } else {
+      memoryModalDate.textContent = item && item.memory_date ? formatDate(item.memory_date) : '一颗温柔的星';
+      memoryModalTitle.textContent = item && item.title ? item.title : '回忆';
+      memoryModalDesc.textContent = item && item.description ? item.description : '有些回忆不需要很长，只要想起就会发光。';
+
+      if (item && item.image_url) {
+        memoryModalImage.hidden = false;
+        memoryModalImage.src = item.image_url;
+      } else {
+        memoryModalImage.hidden = true;
+        memoryModalImage.removeAttribute('src');
+      }
+    }
+
+    if (!memoryModal.open) memoryModal.showModal();
+  }
+
+  function setMemoryEditorStatus(text, kind) {
+    if (!memoryEditorStatus) return;
+    memoryEditorStatus.textContent = text;
+    memoryEditorStatus.className = 'memory-editor-status' + (kind === 'error' ? ' is-error' : kind === 'success' ? ' is-success' : '');
+  }
+
+  function renderMemoryEditorList(selectedKey) {
+    if (!memoryEditorList) return;
+    const displayItems = buildMemoryDisplayItems(memoryStarsData && memoryStarsData.length ? memoryStarsData : []);
+    memoryEditorList.replaceChildren();
+
+    displayItems.forEach(function (item) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'memory-editor-chip' + (item.is_placeholder ? ' is-waiting' : '') + (getMemoryItemKey(item) === selectedKey ? ' is-active' : '');
+
+      const order = document.createElement('div');
+      order.className = 'memory-editor-chip-order';
+      order.textContent = '第 ' + (item.orbit_order || 1) + ' 颗星';
+
+      const title = document.createElement('div');
+      title.className = 'memory-editor-chip-title';
+      title.textContent = item.title || '等待记录';
+
+      const note = document.createElement('div');
+      note.className = 'memory-editor-chip-note';
+      note.textContent = item.is_placeholder ? '这一格还在等真正的故事' : (item.memory_date ? formatDate(item.memory_date) : '还没写日期');
+
+      button.appendChild(order);
+      button.appendChild(title);
+      button.appendChild(note);
+      button.addEventListener('click', function () {
+        fillMemoryEditorForm(item);
+      });
+      memoryEditorList.appendChild(button);
+    });
+  }
+
+  function fillMemoryEditorForm(item) {
+    const safeItem = item || createWaitingMemoryStar(1);
+    memoryEditorSelectedKey = getMemoryItemKey(safeItem);
+    if (memoryEditorId) memoryEditorId.value = safeItem.id ? String(safeItem.id) : '';
+    if (memoryEditorTitle) memoryEditorTitle.value = safeItem.is_placeholder ? '' : (safeItem.title || '');
+    if (memoryEditorOrder) memoryEditorOrder.value = String(safeItem.orbit_order || 1);
+    if (memoryEditorDate) memoryEditorDate.value = safeItem.is_placeholder ? '' : (safeItem.memory_date || '');
+    if (memoryEditorColor) memoryEditorColor.value = safeItem.star_color || '#ff9ed1';
+    if (memoryEditorImage) memoryEditorImage.value = safeItem.is_placeholder ? '' : (safeItem.image_url || '');
+    if (memoryEditorDesc) memoryEditorDesc.value = safeItem.is_placeholder ? '' : (safeItem.description || '');
+    if (memoryEditorDelete) memoryEditorDelete.disabled = !(safeItem.id && !safeItem.is_placeholder);
+    if (memoryEditorSave) memoryEditorSave.textContent = safeItem.id ? '保存修改' : '写下这颗星';
+    renderMemoryEditorList(memoryEditorSelectedKey);
+  }
+
+  function openMemoryEditor(preferredOrder) {
+    if (!memoryEditorModal) return;
+    const displayItems = buildMemoryDisplayItems(memoryStarsData && memoryStarsData.length ? memoryStarsData : []);
+    const targetItem = displayItems.find(function (item) { return item.orbit_order === preferredOrder; }) ||
+      displayItems.find(function (item) { return !item.is_placeholder; }) ||
+      displayItems[0] ||
+      createWaitingMemoryStar(1);
+    fillMemoryEditorForm(targetItem);
+    setMemoryEditorStatus('选一颗星，就可以修改、补写或者把等待记录真正点亮。', '');
+    if (!memoryEditorModal.open) memoryEditorModal.showModal();
+  }
+
+  function closeMemoryEditor() {
+    if (memoryEditorModal && memoryEditorModal.open) memoryEditorModal.close();
+  }
+
+  function setMemoryEditorBusy(busy) {
+    [
+      memoryEditorTitle,
+      memoryEditorOrder,
+      memoryEditorDate,
+      memoryEditorColor,
+      memoryEditorImage,
+      memoryEditorDesc,
+      memoryEditorNew,
+      memoryEditorDelete,
+      memoryEditorSave
+    ].forEach(function (node) {
+      if (node) node.disabled = busy;
+    });
+  }
+
+  function buildMemoryPayloadFromEditor() {
+    const order = Math.max(1, Number(memoryEditorOrder && memoryEditorOrder.value) || 1);
+    return {
+      title: (memoryEditorTitle && memoryEditorTitle.value || '').trim(),
+      memory_date: memoryEditorDate && memoryEditorDate.value ? memoryEditorDate.value : null,
+      description: (memoryEditorDesc && memoryEditorDesc.value || '').trim(),
+      image_url: (memoryEditorImage && memoryEditorImage.value || '').trim(),
+      star_color: memoryEditorColor && memoryEditorColor.value ? memoryEditorColor.value : '#ff9ed1',
+      orbit_order: order
+    };
+  }
+
+  function getMemoryEditorErrorText(error) {
+    const message = error && (error.message || error.code || String(error));
+    if (error && error.code === '23505') {
+      return '这个顺序已经被占用了，换一个“第几颗星”再保存。';
+    }
+    if (error && (error.code === '42501' || error.code === 'PGRST301')) {
+      return '数据库还没有开放回忆星球的编辑权限，先按文档执行 memory_stars 的 SQL。';
+    }
+    if (/memory_stars/i.test(message || '')) {
+      return '回忆星球的数据表或权限还没准备好，先按文档补齐 SQL。';
+    }
+    if (message === 'missing_supabase_config') {
+      return '还没有连上 Supabase，暂时不能直接保存。';
+    }
+    return '这次保存没有成功，稍后再试一次。';
   }
 
   function updateAnniversaryCounter() {
@@ -5274,20 +5818,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function renderMemoryStars() {
     if (!memoryPanel || !memoryStarsBox) return;
-    const items = normalizeMemoryStars(memoryStarsData && memoryStarsData.length ? memoryStarsData : DEFAULT_MEMORY_STARS);
-    updateMemoryMeta(items);
-
-    if (!items.length) {
-      memoryPanel.hidden = true;
-      return;
-    }
+    const actualItems = normalizeMemoryStars(memoryStarsData && memoryStarsData.length ? memoryStarsData : DEFAULT_MEMORY_STARS);
+    const items = buildMemoryDisplayItems(actualItems);
+    updateMemoryMeta(actualItems);
 
     memoryPanel.hidden = false;
     memoryStarsBox.replaceChildren();
 
     items.forEach(function (item, index) {
       const button = document.createElement('button');
-      button.className = 'memory-star';
+      button.className = 'memory-star' + (item.is_placeholder ? ' is-waiting' : '');
       button.type = 'button';
       button.style.setProperty('--memory-color', item.star_color || '#ff9ed1');
 
@@ -5297,7 +5837,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const date = document.createElement('div');
       date.className = 'memory-star-date';
-      date.textContent = item.memory_date ? formatDate(item.memory_date) : '一颗温柔的星';
+      date.textContent = item.memory_date ? formatDate(item.memory_date) : '等待某一天被认真记住';
 
       const title = document.createElement('div');
       title.className = 'memory-star-title';
@@ -5309,7 +5849,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const open = document.createElement('div');
       open.className = 'memory-star-open';
-      open.textContent = '轻触展开这段回忆';
+      open.textContent = item.is_placeholder ? '这一格还在等新的故事' : '轻触展开这段回忆';
 
       button.appendChild(orbit);
       button.appendChild(date);
@@ -5318,20 +5858,7 @@ document.addEventListener('DOMContentLoaded', function () {
       button.appendChild(open);
 
       button.addEventListener('click', function () {
-        if (!memoryModal || !memoryModalTitle || !memoryModalDesc || !memoryModalDate || !memoryModalImage) return;
-        memoryModalDate.textContent = item.memory_date ? formatDate(item.memory_date) : '一颗温柔的星';
-        memoryModalTitle.textContent = item.title;
-        memoryModalDesc.textContent = item.description || '有些回忆不需要很长，只要想起就会发光。';
-
-        if (item.image_url) {
-          memoryModalImage.hidden = false;
-          memoryModalImage.src = item.image_url;
-        } else {
-          memoryModalImage.hidden = true;
-          memoryModalImage.removeAttribute('src');
-        }
-
-        if (!memoryModal.open) memoryModal.showModal();
+        openMemoryDetail(item);
       });
 
       memoryStarsBox.appendChild(button);
@@ -5649,11 +6176,46 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!client) return DEFAULT_MEMORY_STARS;
     const { data, error } = await client
       .from('memory_stars')
-      .select('id, title, memory_date, description, image_url, star_color, orbit_order')
+      .select(MEMORY_STAR_SELECT)
       .order('orbit_order', { ascending: true })
       .order('id', { ascending: false });
     if (error) throw error;
-    return data && data.length ? normalizeMemoryStars(data) : DEFAULT_MEMORY_STARS;
+    return data && data.length ? normalizeMemoryStars(data) : [];
+  }
+
+  async function createMemoryStar(payload) {
+    const client = getSupabaseClient();
+    if (!client) throw new Error('missing_supabase_config');
+    const { data, error } = await client
+      .from('memory_stars')
+      .insert(payload)
+      .select(MEMORY_STAR_SELECT)
+      .single();
+    if (error) throw error;
+    return data;
+  }
+
+  async function updateMemoryStar(id, payload) {
+    const client = getSupabaseClient();
+    if (!client) throw new Error('missing_supabase_config');
+    const { data, error } = await client
+      .from('memory_stars')
+      .update(payload)
+      .eq('id', id)
+      .select(MEMORY_STAR_SELECT)
+      .single();
+    if (error) throw error;
+    return data;
+  }
+
+  async function deleteMemoryStarById(id) {
+    const client = getSupabaseClient();
+    if (!client) throw new Error('missing_supabase_config');
+    const { error } = await client
+      .from('memory_stars')
+      .delete()
+      .eq('id', id);
+    if (error) throw error;
   }
 
   async function createAnniversaryRecord(startedAt) {
@@ -5812,6 +6374,101 @@ document.addEventListener('DOMContentLoaded', function () {
   if (memoryModal) {
     memoryModal.addEventListener('click', function (e) {
       if (e.target === memoryModal) memoryModal.close();
+    });
+  }
+  if (memoryEditorClose) memoryEditorClose.addEventListener('click', closeMemoryEditor);
+  if (memoryEditorModal) {
+    memoryEditorModal.addEventListener('click', function (e) {
+      if (e.target === memoryEditorModal) closeMemoryEditor();
+    });
+  }
+  if (memoryAdminTrigger) {
+    const clearMemoryAdminTimer = function () {
+      clearTimeout(memoryAdminTimer);
+      memoryAdminTimer = null;
+    };
+    memoryAdminTrigger.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      clearMemoryAdminTimer();
+      memoryAdminTimer = setTimeout(function () {
+        memoryAdminTimer = null;
+        openMemoryEditor();
+      }, 700);
+    });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (eventName) {
+      memoryAdminTrigger.addEventListener(eventName, clearMemoryAdminTimer);
+    });
+    memoryAdminTrigger.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openMemoryEditor();
+      }
+    });
+  }
+  if (memoryEditorNew) {
+    memoryEditorNew.addEventListener('click', function () {
+      const displayItems = buildMemoryDisplayItems(memoryStarsData && memoryStarsData.length ? memoryStarsData : []);
+      const placeholder = displayItems.find(function (item) { return item.is_placeholder; }) || createWaitingMemoryStar(displayItems.length + 1);
+      fillMemoryEditorForm(placeholder);
+      setMemoryEditorStatus('新的这一格已经准备好，写下真实发生的瞬间，或者先留一句等待记录。', '');
+    });
+  }
+  if (memoryEditorDelete) {
+    memoryEditorDelete.addEventListener('click', async function () {
+      if (!memoryEditorId || !memoryEditorId.value) return;
+      const deletingId = Number(memoryEditorId.value);
+      setMemoryEditorBusy(true);
+      setMemoryEditorStatus('正在把这颗星收回夜空里...', '');
+      try {
+        await deleteMemoryStarById(deletingId);
+        memoryStarsData = await fetchMemoryStars();
+        renderMemoryStars();
+        const fallbackItem = buildMemoryDisplayItems(memoryStarsData && memoryStarsData.length ? memoryStarsData : [])[0] || createWaitingMemoryStar(1);
+        fillMemoryEditorForm(fallbackItem);
+        setMemoryEditorStatus('已经删除，空出来的这一格会继续等待新的记录。', 'success');
+      } catch (error) {
+        console.error('删除回忆星球失败:', error);
+        setMemoryEditorStatus(getMemoryEditorErrorText(error), 'error');
+      } finally {
+        setMemoryEditorBusy(false);
+      }
+    });
+  }
+  if (memoryEditorForm) {
+    memoryEditorForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const payload = buildMemoryPayloadFromEditor();
+      if (!payload.title) {
+        setMemoryEditorStatus('先给这颗星起一个标题吧。', 'error');
+        if (memoryEditorTitle) memoryEditorTitle.focus();
+        return;
+      }
+
+      setMemoryEditorBusy(true);
+      setMemoryEditorStatus(memoryEditorId && memoryEditorId.value ? '正在保存这颗星...' : '正在把新的回忆放进星空里...', '');
+      try {
+        let savedRecord = null;
+        if (memoryEditorId && memoryEditorId.value) {
+          savedRecord = await updateMemoryStar(Number(memoryEditorId.value), payload);
+        } else {
+          savedRecord = await createMemoryStar(payload);
+        }
+        memoryStarsData = await fetchMemoryStars();
+        renderMemoryStars();
+        const refreshedItems = normalizeMemoryStars(memoryStarsData);
+        const currentItem = refreshedItems.find(function (item) {
+          return savedRecord && item.id === savedRecord.id;
+        }) || refreshedItems.find(function (item) {
+          return item.orbit_order === payload.orbit_order;
+        }) || createWaitingMemoryStar(payload.orbit_order);
+        fillMemoryEditorForm(currentItem);
+        setMemoryEditorStatus(savedRecord && savedRecord.id ? '已经把这颗星保存好了。' : '新的回忆已经放进星空里。', 'success');
+      } catch (error) {
+        console.error('保存回忆星球失败:', error);
+        setMemoryEditorStatus(getMemoryEditorErrorText(error), 'error');
+      } finally {
+        setMemoryEditorBusy(false);
+      }
     });
   }
   if (gameStartBtn) {
