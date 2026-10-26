@@ -2382,6 +2382,56 @@ button {
   color: rgba(255, 227, 241, 0.78);
 }
 
+.happy-summary {
+  position: relative;
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.75;
+  color: rgba(255, 233, 243, 0.68);
+}
+
+.happy-nav {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.happy-nav-btn {
+  padding: 8px 13px;
+  border: 1px solid rgba(255, 209, 233, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffe6f2;
+  font-size: 12px;
+  letter-spacing: 1px;
+  transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+}
+
+.happy-nav-btn:hover {
+  transform: translateY(-1px);
+  border-color: rgba(255, 209, 233, 0.28);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.happy-nav-btn:active {
+  transform: scale(0.98);
+}
+
+.happy-block-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.happy-block-note {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: rgba(255, 221, 237, 0.48);
+}
+
 .happy-shell .memory-panel,
 .happy-shell .game-panel {
   width: 100%;
@@ -4011,16 +4061,27 @@ button {
         <div class="happy-kicker">HAPPY PLANET</div>
         <div class="happy-title">欢迎来到快乐星球</div>
         <div class="happy-copy">这里放回忆、星光和以后慢慢长出来的小宇宙。表白页只负责认真告白，这一页负责把喜欢变得更完整。</div>
+        <div class="happy-summary" id="happySummary">把那些会发光的瞬间，慢慢放进这里。</div>
+        <div class="happy-nav">
+          <button class="happy-nav-btn" id="jumpMemoryStars" type="button">去看回忆星球</button>
+          <button class="happy-nav-btn" id="jumpStarGame" type="button">去点亮星空</button>
+        </div>
       </section>
 
       <div class="memory-panel" id="memoryPanel" hidden>
-        <div class="timeline-label">回忆星球</div>
+        <div class="happy-block-title">
+          <div class="timeline-label">回忆星球</div>
+          <div class="happy-block-note">MEMORY STARS</div>
+        </div>
         <div class="memory-intro">把那些值得反复想起的时刻，收进这片小小的宇宙里。</div>
         <div class="memory-stars" id="memoryStars"></div>
       </div>
 
       <div class="game-panel" id="gamePanel">
-        <div class="timeline-label">点亮星空</div>
+        <div class="happy-block-title">
+          <div class="timeline-label">点亮星空</div>
+          <div class="happy-block-note">LIGHT THE SKY</div>
+        </div>
         <div class="game-title">把星光送到她身边</div>
         <div class="game-subtitle">每点亮一颗星，都会更靠近这片宇宙的中心。</div>
         <div class="game-intro">轻轻点住掉落的星星，点亮 12 颗之后，这片宇宙会把偏爱说给她听。</div>
@@ -4428,6 +4489,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setMusicProfile('game');
     playSceneLift();
     activatePage('game');
+    updateHappySummary();
   }
 
   /* ---------- 夜空流星 ---------- */
@@ -4807,6 +4869,9 @@ document.addEventListener('DOMContentLoaded', function () {
   const memoryModalTitle = $('memoryModalTitle');
   const memoryModalDesc = $('memoryModalDesc');
   const memoryModalImage = $('memoryModalImage');
+  const happySummary = $('happySummary');
+  const jumpMemoryStars = $('jumpMemoryStars');
+  const jumpStarGame = $('jumpStarGame');
   const memoryModalClose = $('memoryModalClose');
   const gameEntry = document.querySelector('.game-entry');
   const openGamePage = $('openGamePage');
@@ -4920,9 +4985,21 @@ document.addEventListener('DOMContentLoaded', function () {
       pad(parts.seconds) + ' 秒';
   }
 
+  function updateHappySummary() {
+    if (!happySummary) return;
+    if (!anniversaryRecord || !anniversaryRecord.started_at) {
+      happySummary.textContent = '把那些会发光的瞬间，慢慢放进这里。';
+      return;
+    }
+    const parts = getElapsedParts(anniversaryRecord.started_at);
+    happySummary.textContent = '今天是一起走过的第 ' + (parts.days + 1) + ' 天，已经收藏了 ' +
+      parts.days + ' 天 ' + pad(parts.hours) + ' 小时的心动。';
+  }
+
   function updateAnniversaryCounter() {
     if (!anniversaryRecord || !anniversaryCounter) return;
     anniversaryCounter.textContent = buildCounterText(anniversaryRecord.started_at);
+    updateHappySummary();
   }
 
   function startAnniversaryCounter() {
@@ -5512,6 +5589,16 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   if (openGamePage) {
     openGamePage.addEventListener('click', showGamePage);
+  }
+  if (jumpMemoryStars) {
+    jumpMemoryStars.addEventListener('click', function () {
+      if (memoryPanel) memoryPanel.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    });
+  }
+  if (jumpStarGame) {
+    jumpStarGame.addEventListener('click', function () {
+      if (gamePanel) gamePanel.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    });
   }
 
   bootstrapAnniversary();
