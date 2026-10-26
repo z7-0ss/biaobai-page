@@ -1136,6 +1136,25 @@ button {
   animation: pageFade 0.65s ease both;
 }
 
+#page5-happy,
+#page6-game {
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  align-items: stretch;
+  justify-content: flex-start;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 150, 200, 0.5) transparent;
+}
+
+#page5-happy.is-active,
+#page6-game.is-active {
+  display: block;
+  animation: pageFade 0.65s ease both;
+}
+
 #page4-letter::-webkit-scrollbar {
   width: 6px;
 }
@@ -1176,18 +1195,45 @@ button {
 }
 
 .letter-bar-inner {
+  position: relative;
   width: 100%;
   max-width: 660px;
   padding: 0 16px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 12px;
+  min-height: 40px;
 }
 
 .letter-bar .back-btn {
   position: static;
   pointer-events: auto;
   background: rgba(52, 24, 80, 0.55);
+}
+
+.letter-bar-meta {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(220px, calc(100% - 148px));
+  min-width: 0;
+  text-align: center;
+  pointer-events: none;
+}
+
+.letter-bar-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  color: rgba(255, 231, 243, 0.95);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .letter-card {
@@ -2129,6 +2175,7 @@ button {
 }
 
 .memory-panel {
+  position: relative;
   margin: 14px auto 0;
   padding: 16px 18px 14px;
   width: min(100%, 420px);
@@ -2139,20 +2186,74 @@ button {
   box-shadow:
     0 10px 30px rgba(22, 8, 38, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  overflow: hidden;
 }
 
 .memory-panel[hidden] {
   display: none;
 }
 
+.memory-panel::before {
+  content: "";
+  position: absolute;
+  inset: -28% auto auto -12%;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 205, 231, 0.12), transparent 70%);
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.memory-panel::after {
+  content: "";
+  position: absolute;
+  inset: auto -18% -34% auto;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(132, 188, 255, 0.12), transparent 72%);
+  filter: blur(14px);
+  pointer-events: none;
+}
+
 .memory-intro {
+  position: relative;
   margin-top: 8px;
   font-size: 15px;
   line-height: 1.7;
   color: rgba(255, 222, 239, 0.78);
 }
 
+.memory-meta {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255, 211, 235, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.memory-stat {
+  font-size: 13px;
+  letter-spacing: 0.6px;
+  color: #fff0f8;
+}
+
+.memory-hint {
+  max-width: 180px;
+  font-size: 12px;
+  line-height: 1.65;
+  text-align: right;
+  color: rgba(255, 225, 239, 0.62);
+}
+
 .memory-stars {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
@@ -2215,6 +2316,19 @@ button {
   color: rgba(255, 216, 235, 0.56);
 }
 
+.memory-star-orbit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 214, 234, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: rgba(255, 231, 243, 0.72);
+}
+
 .memory-star-title {
   margin-top: 10px;
   padding-right: 28px;
@@ -2228,6 +2342,13 @@ button {
   font-size: 12px;
   line-height: 1.7;
   color: rgba(255, 223, 239, 0.72);
+}
+
+.memory-star-open {
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: rgba(255, 229, 241, 0.58);
 }
 
 .memory-modal {
@@ -2838,10 +2959,14 @@ button {
 
 .game-page-wrap {
   width: 100%;
+  min-height: calc(100dvh - 94px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 84px 14px 28px;
+  box-sizing: border-box;
+  padding: 10px 14px calc(28px + env(safe-area-inset-bottom, 0px));
+  position: relative;
+  z-index: 1;
 }
 
 .game-page-wrap::before {
@@ -3419,6 +3544,25 @@ button {
 
   .letter-bar-inner {
     padding: 0 12px;
+  }
+
+  .letter-bar-meta {
+    width: min(188px, calc(100% - 124px));
+  }
+
+  .letter-bar-title {
+    font-size: 12.5px;
+    letter-spacing: 1.1px;
+  }
+
+  .memory-meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .memory-hint {
+    max-width: none;
+    text-align: left;
   }
 
   .select-tip {
@@ -4036,6 +4180,9 @@ button {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
         <span>返回</span>
       </button>
+      <div class="letter-bar-meta" aria-hidden="true">
+        <span class="letter-bar-title">快乐星球</span>
+      </div>
     </div>
   </div>
 
@@ -4058,6 +4205,10 @@ button {
           <div class="happy-block-note">MEMORY STARS</div>
         </div>
         <div class="memory-intro">把那些值得反复想起的时刻，收进这片小小的宇宙里。</div>
+      <div class="memory-meta">
+        <div class="memory-stat" id="memoryStats">正在整理这片星空...</div>
+        <div class="memory-hint" id="memoryHint">轻触一颗星星，就会打开那段回忆。</div>
+      </div>
         <div class="memory-stars" id="memoryStars"></div>
       </div>
 
@@ -4079,6 +4230,9 @@ button {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
         <span>返回</span>
       </button>
+      <div class="letter-bar-meta" aria-hidden="true">
+        <span class="letter-bar-title">点亮星空</span>
+      </div>
     </div>
   </div>
 
@@ -4516,6 +4670,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setMusicProfile('letter');
     playSceneLift();
     activatePage('happy');
+    renderMemoryStars();
     updateHappySummary();
   }
 
@@ -4530,6 +4685,7 @@ document.addEventListener('DOMContentLoaded', function () {
     resetStarGameState();
     setMusicProfile('letter');
     activatePage('happy');
+    renderMemoryStars();
     updateHappySummary();
   }
 
@@ -4905,6 +5061,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const timelineTrack = $('timelineTrack');
   const memoryPanel = $('memoryPanel');
   const memoryStarsBox = $('memoryStars');
+  const memoryStats = $('memoryStats');
+  const memoryHint = $('memoryHint');
   const memoryModal = $('memoryModal');
   const memoryModalDate = $('memoryModalDate');
   const memoryModalTitle = $('memoryModalTitle');
@@ -5038,6 +5196,28 @@ document.addEventListener('DOMContentLoaded', function () {
       parts.days + ' 天 ' + pad(parts.hours) + ' 小时的心动。';
   }
 
+  function getLatestMemoryDate(items) {
+    const validDates = (items || [])
+      .map(function (item) { return item.memory_date ? new Date(item.memory_date) : null; })
+      .filter(function (date) { return date && !Number.isNaN(date.getTime()); })
+      .sort(function (a, b) { return b.getTime() - a.getTime(); });
+    return validDates.length ? validDates[0] : null;
+  }
+
+  function updateMemoryMeta(items) {
+    if (memoryStats) {
+      memoryStats.textContent = items.length
+        ? '已经收好 ' + items.length + ' 颗回忆星球'
+        : '这片星空正在慢慢长出来';
+    }
+    if (memoryHint) {
+      const latest = getLatestMemoryDate(items);
+      memoryHint.textContent = latest
+        ? '最新一颗停在 ' + formatDate(latest) + '，轻触就能展开。'
+        : '轻触一颗星星，就会打开那段回忆。';
+    }
+  }
+
   function updateAnniversaryCounter() {
     if (!anniversaryRecord || !anniversaryCounter) return;
     anniversaryCounter.textContent = buildCounterText(anniversaryRecord.started_at);
@@ -5096,6 +5276,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function renderMemoryStars() {
     if (!memoryPanel || !memoryStarsBox) return;
     const items = normalizeMemoryStars(memoryStarsData && memoryStarsData.length ? memoryStarsData : DEFAULT_MEMORY_STARS);
+    updateMemoryMeta(items);
 
     if (!items.length) {
       memoryPanel.hidden = true;
@@ -5105,11 +5286,15 @@ document.addEventListener('DOMContentLoaded', function () {
     memoryPanel.hidden = false;
     memoryStarsBox.replaceChildren();
 
-    items.forEach(function (item) {
+    items.forEach(function (item, index) {
       const button = document.createElement('button');
       button.className = 'memory-star';
       button.type = 'button';
       button.style.setProperty('--memory-color', item.star_color || '#ff9ed1');
+
+      const orbit = document.createElement('div');
+      orbit.className = 'memory-star-orbit';
+      orbit.textContent = '第 ' + (item.orbit_order || index + 1) + ' 颗星';
 
       const date = document.createElement('div');
       date.className = 'memory-star-date';
@@ -5123,9 +5308,15 @@ document.addEventListener('DOMContentLoaded', function () {
       desc.className = 'memory-star-desc';
       desc.textContent = item.description || '有些回忆不需要很长，只要想起就会发光。';
 
+      const open = document.createElement('div');
+      open.className = 'memory-star-open';
+      open.textContent = '轻触展开这段回忆';
+
+      button.appendChild(orbit);
       button.appendChild(date);
       button.appendChild(title);
       button.appendChild(desc);
+      button.appendChild(open);
 
       button.addEventListener('click', function () {
         if (!memoryModal || !memoryModalTitle || !memoryModalDesc || !memoryModalDate || !memoryModalImage) return;
@@ -5495,6 +5686,7 @@ document.addEventListener('DOMContentLoaded', function () {
       console.error('读取回忆星球失败:', error);
       memoryStarsData = DEFAULT_MEMORY_STARS;
     }
+    renderMemoryStars();
 
     try {
       const record = await fetchAnniversaryRecord();
@@ -5637,7 +5829,11 @@ document.addEventListener('DOMContentLoaded', function () {
   }
   if (jumpMemoryStars) {
     jumpMemoryStars.addEventListener('click', function () {
-      if (memoryPanel) memoryPanel.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      renderMemoryStars();
+      if (memoryPanel) {
+        memoryPanel.hidden = false;
+        memoryPanel.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      }
     });
   }
   if (jumpStarGame) {
