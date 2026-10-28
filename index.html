@@ -4668,7 +4668,7 @@ button {
         <div class="memory-editor-row">
           <label class="memory-editor-field">
             <span class="memory-editor-label">标题</span>
-            <input class="memory-editor-input" id="memoryEditorTitle" type="text" maxlength="40" placeholder="比如：第一次见面" />
+            <input class="memory-editor-input" id="memoryEditorTitle" type="text" maxlength="40" placeholder="比如：等你来写下这一刻" />
           </label>
           <label class="memory-editor-field">
             <span class="memory-editor-label">顺序</span>
@@ -4737,40 +4737,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const MEMORY_STAR_SLOT_COUNT = 6;
   const MEMORY_PLACEHOLDER_COLORS = ['#ff9ed1', '#ffd36e', '#9ed8ff', '#c6a6ff', '#ffbba6', '#9ef1d9'];
   const MEMORY_STAR_SELECT = 'id, title, memory_date, description, image_url, star_color, orbit_order';
-  const DEFAULT_MEMORY_STARS = [
-    {
-      title: '第一次聊天',
-      memory_date: '2026-10-01',
-      description: '那天开始，我就悄悄记住你了。',
-      image_url: '',
-      star_color: '#ff9ed1',
-      orbit_order: 1
-    },
-    {
-      title: '第一次见面',
-      memory_date: '2026-10-10',
-      description: '见到你的那一刻，比想象里还要心动。',
-      image_url: '',
-      star_color: '#ffd36e',
-      orbit_order: 2
-    },
-    {
-      title: '第一次一起吃饭',
-      memory_date: '2026-10-15',
-      description: '普通的一顿饭，也因为你变得很特别。',
-      image_url: '',
-      star_color: '#9ed8ff',
-      orbit_order: 3
-    },
-    {
-      title: '第一次认真想表白',
-      memory_date: '2026-10-20',
-      description: '那几天一直在想，怎么把心意说得更认真一点。',
-      image_url: '',
-      star_color: '#c6a6ff',
-      orbit_order: 4
-    }
-  ];
+  const DEFAULT_MEMORY_STARS = [];
 
   const $ = (id) => document.getElementById(id);
 
