@@ -4519,7 +4519,7 @@ button {
 
     <section class="confession" id="confession" aria-labelledby="confessQ">
       <div class="confess-mark" aria-hidden="true">♡</div>
-      <h3 class="confess-q" id="confessQ">可以做我女朋友吗？</h3>
+      <h3 class="confess-q" id="confessQ">我想一直陪着你</h3>
       <div class="confess-actions">
         <button class="confess-btn yes" id="confessYes" type="button">好呀</button>
         <button class="confess-btn think" id="confessNo" type="button">再想想</button>
@@ -4650,11 +4650,11 @@ button {
       <span>返回</span>
     </button>
   </div>
-  <button class="wax-seal" id="waxSeal" type="button" aria-label="火漆暂时封存中">
+  <button class="wax-seal" id="waxSeal" type="button" aria-label="拆开这封信">
     <span class="wax-seal-stamp" aria-hidden="true">♥</span>
     <span class="wax-seal-crack" aria-hidden="true"></span>
   </button>
-  <div class="wax-seal-hint" id="waxSealHint">火漆暂时封存中</div>
+  <div class="wax-seal-hint" id="waxSealHint">轻触火漆，拆开这封信</div>
 </div>
 
   <dialog class="save-modal" id="saveModal" aria-label="保存今天">
@@ -4751,7 +4751,7 @@ document.addEventListener('DOMContentLoaded', function () {
     key: 'relationship_start',
     memoryBucket: 'memory-images'
   };
-  const WAX_SEAL_LOCKED = true;
+  const WAX_SEAL_LOCKED = false;
 
   const DEFAULT_TIMELINE_ITEMS = [
     { milestone_day: 1, title: '第一天', description: '故事从这一天开始。' },
