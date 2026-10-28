@@ -1372,6 +1372,27 @@ button {
   transition: opacity 0.45s ease, visibility 0.45s;
 }
 
+.wax-seal-nav {
+  position: absolute;
+  top: calc(14px + env(safe-area-inset-top, 0px));
+  left: 50%;
+  z-index: 2;
+  width: min(100%, 680px);
+  padding: 0 16px;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: flex-start;
+  pointer-events: none;
+}
+
+.wax-seal-nav .back-btn {
+  pointer-events: auto;
+  background: rgba(20, 8, 34, 0.7);
+  border-color: rgba(255, 214, 234, 0.2);
+  color: #ffe7f3;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
+}
+
 .wax-seal-overlay::before {
   content: "";
   position: absolute;
@@ -4623,6 +4644,12 @@ button {
 </div>
 
 <div class="wax-seal-overlay" id="waxSealOverlay">
+  <div class="wax-seal-nav">
+    <button class="back-btn" id="backFromWaxSeal" type="button" aria-label="返回上一页">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 5.5 8 12l6.5 6.5"/></svg>
+      <span>返回</span>
+    </button>
+  </div>
   <button class="wax-seal" id="waxSeal" type="button" aria-label="火漆暂时封存中">
     <span class="wax-seal-stamp" aria-hidden="true">♥</span>
     <span class="wax-seal-crack" aria-hidden="true"></span>
@@ -4761,6 +4788,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const backToPage2Left = $('backToPage2Left');
   const backToPage2Right = $('backToPage2Right');
   const backToPage3R = $('backToPage3R');
+  const backFromWaxSeal = $('backFromWaxSeal');
   const backToLetterHappy = $('backToLetterHappy');
   const backToHappyGame = $('backToHappyGame');
 
@@ -6844,6 +6872,7 @@ document.addEventListener('DOMContentLoaded', function () {
   backToPage2Left.addEventListener('click', showPage2);
   backToPage2Right.addEventListener('click', showPage2);
   backToPage3R.addEventListener('click', showPage3Right);
+  if (backFromWaxSeal) backFromWaxSeal.addEventListener('click', showPage3Right);
   if (backToLetterHappy) backToLetterHappy.addEventListener('click', function () {
     showLetterView({ fromHappy: true });
   });
