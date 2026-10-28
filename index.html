@@ -1451,6 +1451,19 @@ button {
   filter: brightness(1.1);
 }
 
+.wax-seal-overlay.locked .wax-seal {
+  cursor: default;
+  filter: saturate(0.94) brightness(0.96);
+}
+
+.wax-seal-overlay.locked .wax-seal:hover {
+  filter: saturate(0.94) brightness(0.96);
+}
+
+.wax-seal-overlay.locked .wax-seal-hint {
+  color: rgba(255, 214, 234, 0.82);
+}
+
 .wax-seal:focus-visible {
   outline: 2px solid rgba(255, 200, 225, 0.9);
   outline-offset: 6px;
@@ -4604,11 +4617,11 @@ button {
 </div>
 
 <div class="wax-seal-overlay" id="waxSealOverlay">
-  <button class="wax-seal" id="waxSeal" type="button" aria-label="拆开这封信">
+  <button class="wax-seal" id="waxSeal" type="button" aria-label="火漆暂时封存中">
     <span class="wax-seal-stamp" aria-hidden="true">♥</span>
     <span class="wax-seal-crack" aria-hidden="true"></span>
   </button>
-  <div class="wax-seal-hint">轻触火漆，拆开这封信</div>
+  <div class="wax-seal-hint" id="waxSealHint">火漆暂时封存中</div>
 </div>
 
   <dialog class="save-modal" id="saveModal" aria-label="保存今天">
@@ -4705,6 +4718,7 @@ document.addEventListener('DOMContentLoaded', function () {
     key: 'relationship_start',
     memoryBucket: 'memory-images'
   };
+  const WAX_SEAL_LOCKED = true;
 
   const DEFAULT_TIMELINE_ITEMS = [
     { milestone_day: 1, title: '第一天', description: '故事从这一天开始。' },
@@ -4784,6 +4798,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const loveFinaleHearts = $('loveFinaleHearts');
   const finaleContinue = $('finaleContinue');
   const waxSealOverlay = $('waxSealOverlay');
+  const waxSeal = $('waxSeal');
+  const waxSealHint = $('waxSealHint');
   const letterCard = document.querySelector('#page4-letter .letter-card');
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -4941,7 +4957,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function breakWaxSeal() {
-    if (!waxSealOverlay || waxSealOverlay.classList.contains('breaking')) return;
+    if (WAX_SEAL_LOCKED || !waxSealOverlay || waxSealOverlay.classList.contains('breaking')) return;
     clearTimeout(sealTimer);
     clearTimeout(sealRemoveTimer);
     clearTimeout(letterOpenResetTimer);
@@ -4968,13 +4984,21 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!waxSealOverlay) return;
     clearTimeout(sealTimer);
     clearTimeout(sealRemoveTimer);
-    waxSealOverlay.classList.remove('show', 'breaking');
+    waxSealOverlay.classList.remove('show', 'breaking', 'locked');
     waxSealOverlay.querySelectorAll('.wax-flash, .wax-ring, .wax-ember, .wax-shard').forEach(function (el) {
       el.remove();
     });
-    if (reduceMotion) return;
     void waxSealOverlay.offsetWidth;
     waxSealOverlay.classList.add('show');
+    if (WAX_SEAL_LOCKED) {
+      waxSealOverlay.classList.add('locked');
+      if (waxSeal) waxSeal.disabled = true;
+      if (waxSealHint) waxSealHint.textContent = '火漆暂时封存中';
+      return;
+    }
+    if (waxSeal) waxSeal.disabled = false;
+    if (waxSealHint) waxSealHint.textContent = '轻触火漆，拆开这封信';
+    if (reduceMotion) return;
     sealTimer = setTimeout(breakWaxSeal, 3200);
   }
 
@@ -5403,7 +5427,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   onActivate(bouquet, showLetter);
 
-  if (waxSealOverlay) {
+  if (waxSealOverlay && !WAX_SEAL_LOCKED) {
     waxSealOverlay.addEventListener('click', breakWaxSeal);
   }
 
