@@ -155,7 +155,63 @@ on public.memory_stars (orbit_order);
 - 你现在的需求是“别人也能编辑”，所以上面这套策略是公开可改的。
 - 如果以后你不想让别人编辑，再把这些 `insert / update / delete policy` 收紧就行。
 
-## 7. 回忆星球现在怎么用
+## 7. 回忆星球图片上传需要的 Storage SQL
+
+如果你还想让大家直接在网页里从相册选图上传，再执行下面这段：
+
+```sql
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'memory-images',
+  'memory-images',
+  true,
+  10485760,
+  array['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+)
+on conflict (id) do update
+set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
+drop policy if exists "public can view memory images" on storage.objects;
+create policy "public can view memory images"
+on storage.objects
+for select
+to anon
+using (bucket_id = 'memory-images');
+
+drop policy if exists "public can upload memory images" on storage.objects;
+create policy "public can upload memory images"
+on storage.objects
+for insert
+to anon
+with check (bucket_id = 'memory-images');
+
+drop policy if exists "public can update memory images" on storage.objects;
+create policy "public can update memory images"
+on storage.objects
+for update
+to anon
+using (bucket_id = 'memory-images')
+with check (bucket_id = 'memory-images');
+
+drop policy if exists "public can delete memory images" on storage.objects;
+create policy "public can delete memory images"
+on storage.objects
+for delete
+to anon
+using (bucket_id = 'memory-images');
+```
+
+说明：
+
+- 执行完以后，网页里的 `上传图片` 就能直接把相册里的图传到 Supabase。
+- 上传成功后，图片链接会自动写进 `memory_stars.image_url`。
+- 现在这套策略也是公开的，所以别人打开网页同样可以上传图片。
+- 当前限制是 `10MB` 以内，支持 `jpg / png / webp / gif`。
+
+## 8. 回忆星球现在怎么用
 
 网页里已经加了一个隐藏管理入口：
 
@@ -170,7 +226,7 @@ on public.memory_stars (orbit_order);
 - 其他空位会显示成“等待记录”
 - 以后发生新的事，再直接在网页里补进去就行
 
-## 8. 改完别忘了重新发布
+## 9. 改完别忘了重新发布
 
 把 `index.html` 填好配置后，再执行：
 

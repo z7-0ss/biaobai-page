@@ -2649,6 +2649,52 @@ button {
   padding: 6px;
 }
 
+.memory-editor-upload-note {
+  margin-top: -2px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: rgba(255, 229, 241, 0.58);
+}
+
+.memory-editor-preview {
+  display: grid;
+  gap: 10px;
+  margin-top: 4px;
+  padding: 12px;
+  border: 1px solid rgba(255, 205, 231, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.memory-editor-preview[hidden] {
+  display: none;
+}
+
+.memory-editor-preview-image {
+  display: block;
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 14px;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22);
+}
+
+.memory-editor-preview-note {
+  font-size: 12px;
+  line-height: 1.7;
+  color: rgba(255, 228, 241, 0.72);
+}
+
+.memory-editor-clear-image {
+  justify-self: flex-start;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 205, 231, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffe4f1;
+  font: inherit;
+}
+
 .memory-editor-actions {
   display: flex;
   flex-wrap: wrap;
@@ -2688,6 +2734,7 @@ button {
 .memory-editor-secondary:disabled,
 .memory-editor-delete:disabled,
 .memory-editor-save:disabled,
+.memory-editor-clear-image:disabled,
 .memory-editor-input:disabled,
 .memory-editor-textarea:disabled {
   opacity: 0.48;
@@ -4448,7 +4495,7 @@ button {
         <div class="timeline-current" id="timelineCurrent">正在展开这片星空...</div>
         <div class="timeline-track" id="timelineTrack"></div>
       </div>
-      <div class="game-entry">
+      <div class="game-entry" hidden>
         <button class="game-entry-btn" id="openHappyPage" type="button">
           <span class="game-entry-title">进入快乐星球</span>
         </button>
@@ -4621,8 +4668,18 @@ button {
         </div>
         <label class="memory-editor-field">
           <span class="memory-editor-label">图片链接</span>
-          <input class="memory-editor-input" id="memoryEditorImage" type="url" placeholder="没有的话可以留空" />
+          <input class="memory-editor-input" id="memoryEditorImage" type="url" placeholder="也可以不填，直接从相册选图" />
         </label>
+        <label class="memory-editor-field">
+          <span class="memory-editor-label">上传图片</span>
+          <input class="memory-editor-input" id="memoryEditorUpload" type="file" accept="image/*" />
+          <div class="memory-editor-upload-note">手机上可以直接从相册选择，保存时会自动上传到回忆星球。</div>
+        </label>
+        <div class="memory-editor-preview" id="memoryEditorPreview" hidden>
+          <img class="memory-editor-preview-image" id="memoryEditorPreviewImage" alt="回忆图片预览" />
+          <div class="memory-editor-preview-note" id="memoryEditorPreviewNote">选中的图片会在保存这颗星时一起上传。</div>
+          <button class="memory-editor-clear-image" id="memoryEditorClearImage" type="button">移除图片</button>
+        </div>
         <label class="memory-editor-field">
           <span class="memory-editor-label">回忆内容</span>
           <textarea class="memory-editor-textarea" id="memoryEditorDesc" placeholder="把那天真正发生的事，或者你想留给未来的一句等待记录写在这里。"></textarea>
@@ -4645,7 +4702,8 @@ document.addEventListener('DOMContentLoaded', function () {
     url: 'https://kdxtpuuneklazrhonecu.supabase.co',
     anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtkeHRwdXVuZWtsYXpyaG9uZWN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5MDc1NTUsImV4cCI6MjEwODQ4MzU1NX0.NafZQ74hdXU2xYqBPMeA_TMCJOUW6Tcz1nFModtiCmA',
     table: 'love_milestones',
-    key: 'relationship_start'
+    key: 'relationship_start',
+    memoryBucket: 'memory-images'
   };
 
   const DEFAULT_TIMELINE_ITEMS = [
@@ -5419,6 +5477,11 @@ document.addEventListener('DOMContentLoaded', function () {
   const memoryEditorDate = $('memoryEditorDate');
   const memoryEditorColor = $('memoryEditorColor');
   const memoryEditorImage = $('memoryEditorImage');
+  const memoryEditorUpload = $('memoryEditorUpload');
+  const memoryEditorPreview = $('memoryEditorPreview');
+  const memoryEditorPreviewImage = $('memoryEditorPreviewImage');
+  const memoryEditorPreviewNote = $('memoryEditorPreviewNote');
+  const memoryEditorClearImage = $('memoryEditorClearImage');
   const memoryEditorDesc = $('memoryEditorDesc');
   const memoryEditorClose = $('memoryEditorClose');
   const memoryEditorNew = $('memoryEditorNew');
@@ -5467,6 +5530,8 @@ document.addEventListener('DOMContentLoaded', function () {
   let gameEndAt = 0;
   let memoryEditorSelectedKey = '';
   let memoryAdminTimer = null;
+  let memoryEditorPendingFile = null;
+  let memoryEditorPreviewObjectUrl = '';
 
   function pad(n) {
     return String(n).padStart(2, '0');
@@ -5574,6 +5639,52 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!item) return 'order:1';
     if (item.id) return 'id:' + item.id;
     return 'order:' + (item.orbit_order || 1);
+  }
+
+  function revokeMemoryPreviewObjectUrl() {
+    if (memoryEditorPreviewObjectUrl) {
+      URL.revokeObjectURL(memoryEditorPreviewObjectUrl);
+      memoryEditorPreviewObjectUrl = '';
+    }
+  }
+
+  function updateMemoryEditorPreview(src, note, isObjectUrl) {
+    if (!memoryEditorPreview || !memoryEditorPreviewImage || !memoryEditorPreviewNote) return;
+    revokeMemoryPreviewObjectUrl();
+
+    if (!src) {
+      memoryEditorPreview.hidden = true;
+      memoryEditorPreviewImage.removeAttribute('src');
+      return;
+    }
+
+    if (isObjectUrl) memoryEditorPreviewObjectUrl = src;
+    memoryEditorPreview.hidden = false;
+    memoryEditorPreviewImage.src = src;
+    memoryEditorPreviewNote.textContent = note;
+  }
+
+  function refreshMemoryEditorPreview() {
+    if (memoryEditorPendingFile) {
+      updateMemoryEditorPreview(
+        URL.createObjectURL(memoryEditorPendingFile),
+        '这张图片会在保存这颗星时自动上传。',
+        true
+      );
+      return;
+    }
+    const currentUrl = (memoryEditorImage && memoryEditorImage.value || '').trim();
+    if (currentUrl) {
+      updateMemoryEditorPreview(currentUrl, '当前这颗星已经带着图片了，也可以重新选图替换。', false);
+      return;
+    }
+    updateMemoryEditorPreview('', '', false);
+  }
+
+  function clearMemoryEditorPendingFile() {
+    memoryEditorPendingFile = null;
+    if (memoryEditorUpload) memoryEditorUpload.value = '';
+    refreshMemoryEditorPreview();
   }
 
   function buildCounterText(startAt) {
@@ -5695,6 +5806,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (memoryEditorColor) memoryEditorColor.value = safeItem.star_color || '#ff9ed1';
     if (memoryEditorImage) memoryEditorImage.value = safeItem.is_placeholder ? '' : (safeItem.image_url || '');
     if (memoryEditorDesc) memoryEditorDesc.value = safeItem.is_placeholder ? '' : (safeItem.description || '');
+    clearMemoryEditorPendingFile();
+    refreshMemoryEditorPreview();
     if (memoryEditorDelete) memoryEditorDelete.disabled = !(safeItem.id && !safeItem.is_placeholder);
     if (memoryEditorSave) memoryEditorSave.textContent = safeItem.id ? '保存修改' : '写下这颗星';
     renderMemoryEditorList(memoryEditorSelectedKey);
@@ -5713,6 +5826,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function closeMemoryEditor() {
+    revokeMemoryPreviewObjectUrl();
     if (memoryEditorModal && memoryEditorModal.open) memoryEditorModal.close();
   }
 
@@ -5723,10 +5837,12 @@ document.addEventListener('DOMContentLoaded', function () {
       memoryEditorDate,
       memoryEditorColor,
       memoryEditorImage,
+      memoryEditorUpload,
       memoryEditorDesc,
       memoryEditorNew,
       memoryEditorDelete,
-      memoryEditorSave
+      memoryEditorSave,
+      memoryEditorClearImage
     ].forEach(function (node) {
       if (node) node.disabled = busy;
     });
@@ -5746,8 +5862,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function getMemoryEditorErrorText(error) {
     const message = error && (error.message || error.code || String(error));
+    if (message === 'invalid_image_type') {
+      return '请选择一张图片文件再上传。';
+    }
+    if (message === 'image_too_large') {
+      return '图片太大了，换一张 10MB 以内的。';
+    }
     if (error && error.code === '23505') {
       return '这个顺序已经被占用了，换一个“第几颗星”再保存。';
+    }
+    if (/storage|bucket|object/i.test(message || '')) {
+      return '图片上传暂时没有成功，先按文档执行 Storage 的 SQL，再重新选图保存。';
     }
     if (error && (error.code === '42501' || error.code === 'PGRST301')) {
       return '数据库还没有开放回忆星球的编辑权限，先按文档执行 memory_stars 的 SQL。';
@@ -6129,6 +6254,7 @@ document.addEventListener('DOMContentLoaded', function () {
       anniversaryStart.textContent = formatDateTime(startAt);
       startAnniversaryCounter();
     }
+    if (gameEntry) gameEntry.hidden = false;
 
     renderTimeline();
     renderMemoryStars();
@@ -6216,6 +6342,42 @@ document.addEventListener('DOMContentLoaded', function () {
       .delete()
       .eq('id', id);
     if (error) throw error;
+  }
+
+  function buildMemoryUploadPath(file, order) {
+    const rawName = (file && file.name) ? file.name : 'memory-image';
+    const cleanName = rawName
+      .toLowerCase()
+      .replace(/[^a-z0-9.\-_]+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '') || 'memory-image';
+    return 'memory-stars/' + Date.now() + '-' + order + '-' + cleanName;
+  }
+
+  async function uploadMemoryEditorImage(file, order) {
+    const client = getSupabaseClient();
+    if (!client) throw new Error('missing_supabase_config');
+    if (!file) return '';
+    if (!/^image\//.test(file.type || '')) {
+      throw new Error('invalid_image_type');
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      throw new Error('image_too_large');
+    }
+
+    const bucket = SUPABASE_CONFIG.memoryBucket || 'memory-images';
+    const path = buildMemoryUploadPath(file, order);
+    const { error } = await client.storage
+      .from(bucket)
+      .upload(path, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type || undefined
+      });
+    if (error) throw error;
+
+    const { data } = client.storage.from(bucket).getPublicUrl(path);
+    return data && data.publicUrl ? data.publicUrl : '';
   }
 
   async function createAnniversaryRecord(startedAt) {
@@ -6413,6 +6575,45 @@ document.addEventListener('DOMContentLoaded', function () {
       setMemoryEditorStatus('新的这一格已经准备好，写下真实发生的瞬间，或者先留一句等待记录。', '');
     });
   }
+  if (memoryEditorUpload) {
+    memoryEditorUpload.addEventListener('change', function () {
+      const file = memoryEditorUpload.files && memoryEditorUpload.files[0];
+      if (!file) {
+        memoryEditorPendingFile = null;
+        refreshMemoryEditorPreview();
+        return;
+      }
+      if (!/^image\//.test(file.type || '')) {
+        memoryEditorUpload.value = '';
+        memoryEditorPendingFile = null;
+        setMemoryEditorStatus('请选择一张图片文件。', 'error');
+        refreshMemoryEditorPreview();
+        return;
+      }
+      if (file.size > 10 * 1024 * 1024) {
+        memoryEditorUpload.value = '';
+        memoryEditorPendingFile = null;
+        setMemoryEditorStatus('图片太大了，换一张 10MB 以内的。', 'error');
+        refreshMemoryEditorPreview();
+        return;
+      }
+      memoryEditorPendingFile = file;
+      refreshMemoryEditorPreview();
+      setMemoryEditorStatus('图片已经选好了，保存这颗星时会一起上传。', '');
+    });
+  }
+  if (memoryEditorImage) {
+    memoryEditorImage.addEventListener('input', function () {
+      if (!memoryEditorPendingFile) refreshMemoryEditorPreview();
+    });
+  }
+  if (memoryEditorClearImage) {
+    memoryEditorClearImage.addEventListener('click', function () {
+      if (memoryEditorImage) memoryEditorImage.value = '';
+      clearMemoryEditorPendingFile();
+      setMemoryEditorStatus('这颗星的图片已经移除，保存后会生效。', '');
+    });
+  }
   if (memoryEditorDelete) {
     memoryEditorDelete.addEventListener('click', async function () {
       if (!memoryEditorId || !memoryEditorId.value) return;
@@ -6447,6 +6648,12 @@ document.addEventListener('DOMContentLoaded', function () {
       setMemoryEditorBusy(true);
       setMemoryEditorStatus(memoryEditorId && memoryEditorId.value ? '正在保存这颗星...' : '正在把新的回忆放进星空里...', '');
       try {
+        if (memoryEditorPendingFile) {
+          setMemoryEditorStatus('正在上传图片到回忆星球...', '');
+          const uploadedUrl = await uploadMemoryEditorImage(memoryEditorPendingFile, payload.orbit_order);
+          payload.image_url = uploadedUrl;
+          if (memoryEditorImage) memoryEditorImage.value = uploadedUrl;
+        }
         let savedRecord = null;
         if (memoryEditorId && memoryEditorId.value) {
           savedRecord = await updateMemoryStar(Number(memoryEditorId.value), payload);
