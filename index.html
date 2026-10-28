@@ -5049,6 +5049,7 @@ document.addEventListener('DOMContentLoaded', function () {
     clearPage3();
     clearLetterStars();
     resetBubbles();
+    if (waxSealOverlay) waxSealOverlay.classList.remove('show', 'breaking', 'locked');
     activatePage('page3R');
   }
 
